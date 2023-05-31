@@ -1,20 +1,13 @@
-var mysql = require('mysql');
+var host = process.env.DB_HOST || 'localhost' 
+var user = process.env.DB_USER || 'root'
+var password = process.env.DB_PASS || 'admin'
+var database = process.env.DB_DATABASE || 'kma_student_management'
 
-function getDbConnection() {
-    var con = mysql.createConnection({
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASS || 'admin'
-    });
+const { Sequelize, DataTypes } = require('sequelize');
 
-    con.connect(function (err) {
-        if (err)
-            throw err;
+const sequelize = new Sequelize(database, user, password, {
+    host: host,
+    dialect: 'mysql',
+});
 
-        console.log("Connected!");
-        return con;
-    });
-
-}
-
-module.exports = getDbConnection
+module.exports = sequelize;
