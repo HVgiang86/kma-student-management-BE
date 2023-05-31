@@ -41,6 +41,9 @@ const auth = require('../../middleware/authMiddleware')
  *         citizen_id:
  *           type: string
  *           description: citizen_id
+ *         nation:
+ *           type: string
+ *           description: nation
  *         religion:
  *           type: string
  *           description: religion
@@ -65,7 +68,8 @@ const auth = require('../../middleware/authMiddleware')
  *         gender: "male"
  *         date_of_birth: "1999-01-01"
  *         citizen_id: "123456789"
- *         religion: "none"
+ *         nation: "Kinh"
+ *         religion: "Không"
  *         nationality: "Vietnam"
  *         phone_number: "123456789"
  *         address: "123 Nguyen Van Linh"
@@ -103,6 +107,9 @@ const auth = require('../../middleware/authMiddleware')
  *          citizen_id:
  *            type: string
  *            description: citizen_id
+ *          nation:
+ *            type: string
+ *            description: nation
  *          religion:
  *            type: string
  *            description: religion
@@ -147,6 +154,9 @@ const auth = require('../../middleware/authMiddleware')
  *          citizen_id:
  *            type: string
  *            description: citizen_id
+ *          nation:
+ *            type: string
+ *            description: nation
  *          religion:
  *            type: string
  *            description: religion
@@ -389,10 +399,11 @@ router.put('/', auth.isAuth, async function (req, res, next) {
     const religion = req.body.religion;
     const nationality = req.body.nationality;
     const gender = req.body.gender;
+    const nation = req.body.nation;
 
     const user = {
       uid: uid, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth, citizen_id: citizen_id,
-      religion: religion, nationality: nationality, gender: gender
+      religion: religion, nationality: nationality, gender: gender, nation: nation
     }
 
     //justify
@@ -476,6 +487,7 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
+
 router.post('/', async function (req, res, next) {
   console.log("POST /users");
   try {
@@ -496,10 +508,11 @@ router.post('/', async function (req, res, next) {
     const nationality = req.body.nationality;
     const gender = req.body.gender;
     const role = req.body.role;
+    const nation = req.body.nation;
   
     const user = {
       email: email, password: password, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth, citizen_id: citizen_id,
-      religion: religion, nationality: nationality, gender: gender, role: role
+      religion: religion, nationality: nationality, gender: gender, role: role, nation: nation
     }
   
     //justify

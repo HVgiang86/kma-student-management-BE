@@ -12,15 +12,6 @@ Crypto = {
             throw new Error(e);
         }
     },
-    // hash: async (password, salt) => {
-    //     try {
-    //         const hashed_password = await bcrypt.hash(password, salt);
-    //         return hashed_password;
-    //     } catch (e) {
-    //         console.log("An error occurred: " + e);
-    //         throw new Error(e);
-    //     }
-    // },
     comparePassword: async (password, hashed_password) => {
         try {
             return await bcrypt.compare(password, hashed_password);

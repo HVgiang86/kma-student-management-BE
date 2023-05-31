@@ -1,7 +1,7 @@
 const sequelize = require('../configs/dbconnection');
 const { Sequelize, DataTypes } = require('sequelize');
 
-const User = sequelize.define('User', {
+const user = sequelize.define('User', {
     uid: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -24,7 +24,7 @@ const User = sequelize.define('User', {
     },
     phone_number: { 
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     address: { 
         type: DataTypes.STRING,
@@ -36,15 +36,19 @@ const User = sequelize.define('User', {
     },
     citizen_id: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
+    },
+    nation: {
+        type: DataTypes.STRING,
+        allowNull: true,
     },
     religion: { 
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     nationality: { 
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     gender: {
         type: DataTypes.ENUM('male','female','other'),
@@ -58,4 +62,4 @@ const User = sequelize.define('User', {
     timestamps: false,
 });
 
-module.exports = User;
+module.exports = user;

@@ -16,6 +16,7 @@ UserController = {
         const nationality = user.nationality;
         const gender = user.gender;
         const role = user.role;
+        const nation = user.nation;
 
         try {
             const uuid = uuidv4(16);
@@ -36,7 +37,7 @@ UserController = {
 
             await User.create({
                 uid: uid, email: email, hashed_password: hashedPassword, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth,
-                citizen_id: citizen_id, religion: religion, nationality: nationality, gender: gender, role_name: role
+                citizen_id: citizen_id, religion: religion, nationality: nationality, gender: gender, role_name: role, nation: nation
             }).then(user => {
                 console.log("Controller: Created user: " + JSON.stringify(user, null, 4));
                 newUser = user;
@@ -183,7 +184,8 @@ UserController = {
                 phone_number: user.phone_number,
                 address: user.address,
                 date_of_birth: user.date_of_birth,
-                citizen_id: user.citizen_id,    
+                citizen_id: user.citizen_id,
+                nation: user.nation,    
                 religion: user.religion,    
                 nationality: user.nationality,
                 gender: user.gender,

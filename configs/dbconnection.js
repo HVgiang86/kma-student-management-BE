@@ -1,7 +1,14 @@
-var host = process.env.DB_HOST || 'localhost' 
-var user = process.env.DB_USER || 'root'
-var password = process.env.DB_PASS || 'admin'
-var database = process.env.DB_DATABASE || 'kma_student_management'
+require('dotenv').config();
+var host = process.env.DB_HOST 
+var user = process.env.DB_USER
+var password = process.env.DB_PASS
+var database = process.env.DB_NAME
+
+console.log(`host: ${host}`)
+console.log(`user: ${user}`)
+console.log(`password: ${password}`)
+console.log(`database: ${database}`)
+
 
 const { Sequelize, DataTypes } = require('sequelize');
 
