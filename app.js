@@ -16,6 +16,8 @@ db.authenticate().then(() => {
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users/users');
 var loginRouter = require('./routes/login/login');
+var passwordRouter = require('./routes/users/password');
+var roleRouter = require('./routes/users/roles');
 
 var app = express();
 
@@ -37,6 +39,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
+app.use('/change_password', passwordRouter);
+app.use('/change_role', roleRouter);
 
 
 const swaggerUi = require('swagger-ui-express');

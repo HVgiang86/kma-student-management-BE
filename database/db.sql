@@ -35,7 +35,7 @@
  
  create table users (
 		uid varchar(16) primary key,
-        hashed_password varchar(30),
+        hashed_password varchar(80) not null,
 		first_name nvarchar(30),
         last_name nvarchar(30),
         email nvarchar(40) not null,

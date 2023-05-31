@@ -1,16 +1,24 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/users/users');
+const auth = require('../../middleware/authMiddleware')
 
 
 
 /* GET users listing. */
-router.get('/', async function (req, res, next) {
+router.get('/', auth.isAuth, async function (req, res, next) {
   console.log("GET /users");
   try {
+    if (req.user.role_name !== 'admin') {
+      msg = { msg: "Unauthorized. Forbidden" }
+      res.status(403).send(JSON.stringify(msg, null, 4));
+      return;
+    }
+
     const result = await controller.getUserList();
     if (result && result.length > 0) {
-      res.status(200).send(JSON.stringify(result, null, 4));
+      const display = result.map(user => controller.copyUserWithoutPassword(user));
+      res.status(200).send(JSON.stringify(display, null, 4));
     } else {
       msg = { msg: "No Account Found" }
       res.status(404).send(JSON.stringify(msg, null, 4));
@@ -23,12 +31,16 @@ router.get('/', async function (req, res, next) {
 
 });
 
-router.delete('/', async function (req, res, next) {
+router.delete('/', auth.isAuth, async function (req, res, next) {
   console.log("DELETE /users");
 
+  if (req.user.role_name !== 'admin') {
+    msg = { msg: "Unauthorized. Forbidden" }
+    res.status(403).send(JSON.stringify(msg, null, 4));
+    return;
+  }
+
   const uid = req.body.uid;
-
-
   try {
     const result = await controller.deleteByUid(uid);
 
@@ -47,8 +59,17 @@ router.delete('/', async function (req, res, next) {
 });
 
 
-router.put('/', async function (req, res, next) {
+router.put('/', auth.isAuth, async function (req, res, next) {
   console.log("PUT /users");
+
+  const requestedUserId = req.user.uid;
+
+  if (!(req.user.role_name === 'admin' || requestedUserId === req.body.uid)) {
+    msg = { msg: "Unauthorized. Forbidden" }
+    res.status(403).send(JSON.stringify(msg, null, 4));
+    return;
+  }
+
   const uid = req.body.uid;
   const first_name = req.body.first_name;
   const last_name = req.body.last_name;
@@ -72,7 +93,7 @@ router.put('/', async function (req, res, next) {
     }
   }
 
-  if (user.uid.length == 0  || user.first_name.length == 0 || user.last_name.length == 0)
+  if (user.uid.length == 0 || user.first_name.length == 0 || user.last_name.length == 0)
     res.status(400).send(JSON.stringify("Invalid input", null, 4));
 
   try {
@@ -80,7 +101,8 @@ router.put('/', async function (req, res, next) {
 
     if (result) {
       console.log("Updated user: " + JSON.stringify(result, null, 4));
-      res.status(200).send(JSON.stringify(result, null, 4));
+      const display = controller.copyUserWithoutPassword(result);
+      res.status(200).send(JSON.stringify(display, null, 4));
 
     } else {
       msg = { msg: "No Account Found" }
@@ -97,6 +119,7 @@ router.put('/', async function (req, res, next) {
 
 router.post('/', async function (req, res, next) {
   console.log("POST /users");
+
   const email = req.body.email
   const password = req.body.password
   const first_name = req.body.first_name;
@@ -131,7 +154,9 @@ router.post('/', async function (req, res, next) {
 
     if (result) {
       console.log("Created user: " + JSON.stringify(result, null, 4));
-      res.status(200).send(JSON.stringify(result, null, 4));
+      const display = controller.copyUserWithoutPassword(result);
+      res.status(200).send(JSON.stringify(display, null, 4));
+
     } else {
       console.log("router: Email already exists")
       msg = { msg: "Email already exists" }

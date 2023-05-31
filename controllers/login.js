@@ -5,7 +5,6 @@ const Crypto = require('../utils/crypto');
 LoginController = {
     login: async (email, password) => {
         console.log(`password: ${password}`)
-        var hashed_password = await Crypto.hash(password);
 
         try {
             const user = await User.findOne({ where: { email: email } })
@@ -14,12 +13,14 @@ LoginController = {
                 return null;
             }
             console.log(`user: ${JSON.stringify(user, null, 4)}`)
-            var userHashedPassword = await Crypto.hash(user.hashed_password);
+            var userHashedPassword = user.hashed_password;
+            //var hashed_password = await Crypto.hash(password,user.salt);
             console.log(`userHashedPassword: ${JSON.stringify(userHashedPassword, null, 4)}`)
-            console.log(`hashed_password: ${JSON.stringify(hashed_password, null, 4)}`)
-            const isPasswordCorrect = await Crypto.comparePassword(userHashedPassword,hashed_password);
+            //console.log(`hashed_password: ${JSON.stringify(hashed_password, null, 4)}`)
+            const isPasswordCorrect = await Crypto.comparePassword(password,userHashedPassword);
 
             if (!isPasswordCorrect) {
+                console.log("Password incorrect")
                 return null;
             }
 

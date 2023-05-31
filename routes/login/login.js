@@ -19,7 +19,7 @@ router.post('/', async function (req, res) {
                 msg: "Authorized",
                 token: auth.genToken(result.uid, result.email,)
             }
-            res.status(200).send(JSON.stringify(result, null, 4));
+            res.status(200).send(JSON.stringify(msg, null, 4));
         }
     } catch (err) {
         console.log('An error occurred:', err);

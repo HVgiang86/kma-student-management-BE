@@ -7,7 +7,7 @@ const User = sequelize.define('User', {
         primaryKey: true,
     },
     hashed_password: {
-        type: DataTypes.STRING,
+        type: DataTypes.TEXT,
         allowNull: false,
     },
     first_name: {
@@ -57,6 +57,5 @@ const User = sequelize.define('User', {
 },{
     timestamps: false,
 });
-
 
 module.exports = User;

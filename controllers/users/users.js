@@ -31,9 +31,11 @@ UserController = {
             }
 
             var newUser = null
-            
+
+            const hashedPassword = await Crypto.hash(password);
+
             await User.create({
-                uid: uid, email: email, hashed_password: password, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth,
+                uid: uid, email: email, hashed_password: hashedPassword, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth,
                 citizen_id: citizen_id, religion: religion, nationality: nationality, gender: gender, role_name: role
             }).then(user => {
                 console.log("Controller: Created user: " + JSON.stringify(user, null, 4));
@@ -96,6 +98,97 @@ UserController = {
             console.log("Updated user: " + JSON.stringify(result, null, 4));
 
             return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
+
+    changePassword: async (uid, old_password, new_password) => {
+        try {
+            const userToUpdate = await User.findOne({ where: { uid: uid } });
+            if (!userToUpdate) {
+                console.log("User not found - Controller")
+                return 404;
+            }
+
+            const isCorrectOldPassword = await Crypto.comparePassword(old_password, userToUpdate.hashed_password)
+
+            if(!isCorrectOldPassword){
+                return 401;
+            }
+
+            const hashedPassword = await Crypto.hash(new_password);
+
+            const result = await userToUpdate.update({ hashed_password: hashedPassword });
+            console.log("Updated user: " + JSON.stringify(result, null, 4));
+
+            return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
+    changePassword: async (email, new_password) => {
+        try {
+            const userToUpdate = await User.findOne({ where: { email: email } });
+            if (!userToUpdate) {
+                console.log("User not found - Controller")
+                return null;
+            }
+
+            const hashedPassword = await Crypto.hash(new_password);
+
+            const result = await userToUpdate.update({ hashed_password: hashedPassword });
+            console.log("Updated user: " + JSON.stringify(result, null, 4));
+
+            return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    }
+    ,
+    changeRole: async (uid, role) => {
+        try {
+            if (role != 'admin' && role != 'student') {
+                console.log("Invalid role - Controller")
+                return 400;
+            }
+
+            const userToUpdate = await User.findOne({ where: { uid: uid } });
+
+            if (!userToUpdate) {
+                console.log("User not found - Controller")
+                return 404;
+            }
+
+            const result = await userToUpdate.update({ role_name: role });
+
+            console.log("Updated user: " + JSON.stringify(result, null, 4));
+
+            return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
+    copyUserWithoutPassword: (user) => {
+        try {
+            return {
+                uid: user.uid,
+                first_name: user.first_name, 
+                last_name: user.last_name, 
+                email: user.email,
+                phone_number: user.phone_number,
+                address: user.address,
+                date_of_birth: user.date_of_birth,
+                citizen_id: user.citizen_id,    
+                religion: user.religion,    
+                nationality: user.nationality,
+                gender: user.gender,
+                role_name: user.role_name
+            }
         } catch (err) {
             console.log("An error occurred: " + err);
             throw new Error(err);
