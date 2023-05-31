@@ -4,6 +4,66 @@ var router = express.Router();
 const controller = require('../../controllers/users/users');
 const auth = require('../../middleware/authMiddleware')
 
+/**
+ * @swagger
+ * /change_role:
+ *   put:
+ *     summary: Change role of a user. Only admin can do this
+ *     description: Change role of a user. Only admin can do this
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                uid:
+ *                  type: string
+ *                new_role:
+ *                  type: string
+ *     responses:
+ *        200:
+ *          description: Created user
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  uid:
+ *                    type: string
+ *                  new_role:
+ *                    type: string
+ *        400:
+ *          description: Bad Request. Not a valid role
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Bad Request. Not a valid role
+ *        404:
+ *          description: No Account Found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: No Account Found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
 router.put('/', auth.isAuth, async function (req, res, next) {
     console.log("PUT /change_role");
     console.log(req.user.role_name);

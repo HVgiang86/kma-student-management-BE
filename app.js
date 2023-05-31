@@ -12,6 +12,52 @@ db.authenticate().then(() => {
     console.error(err);
 })
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsDoc = require('swagger-jsdoc');
+
+const options = {
+    definition: {
+        openapi: '3.0.0',
+        info: {
+            title: 'API for KMA Student management web project',
+            version: '1.0.0',
+            description: 'This is a REST API application made with Express. It retrieves data from MySQL database and returns it in JSON format.',
+            contact: {
+                email: 'hvgiang86@gmail.com'
+            }
+        },
+        server: {
+            url: 'http://localhost:3000'
+        },
+        components: {
+            securitySchemes: {
+                bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
+                }
+            }
+        },
+        security: [{
+            bearerAuth: []
+        }],
+    },
+    apis: ['./routes/users/users.js', './routes/users/roles.js', './routes/users/password.js', './routes/login/login.js']
+}
+const specs = swaggerJsDoc(options);
+
+/**
+ * @swagger   
+ * components:
+ *  securitySchemes:
+ *    bearerAuth:
+ *      type: http
+ *      scheme: bearer
+ *      bearerFormat: JWT  
+ * security:
+ *  - bearerAuth: []                                                                                                                                                                                                                                                                                                                                                                                                                                        
+ */
+
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users/users');
@@ -42,26 +88,7 @@ app.use('/login', loginRouter);
 app.use('/change_password', passwordRouter);
 app.use('/change_role', roleRouter);
 
-
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc = require('swagger-jsdoc');
-
-const options = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Node Express API for KMA Student management web project',
-            version: '1.0.0',
-        },
-        server: {
-            api: 'http://localhost:3000'
-        }
-    },
-    apis: ['./routes/users/users.js']
-}
-
-const swaggerDocs = swaggerJsDoc(options);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
