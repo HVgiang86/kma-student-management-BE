@@ -1,5 +1,5 @@
 var jwt = require('jsonwebtoken');
-var User = require('../models/userModel');
+var User = require('../models/user');
 var secretKey = process.env.JWT_SECRET || 'kmaGiangSecretKey';
 
 //var options = { expiresIn: '1d' };

@@ -7,8 +7,8 @@ var auth = require('../../middleware/authMiddleware')
  * @swagger
  * /login:
  *   post:
- *     summary: Login and get token
- *     description: Login and get JWT token
+ *     summary: Login and get token, user id
+ *     description: Login and get JWT token, user id
  *     requestBody:
  *        required: true
  *        content:
@@ -24,18 +24,22 @@ var auth = require('../../middleware/authMiddleware')
  *                  example: password
  *     responses:
  *        200:
- *          description: Created user
+ *          description: Success
  *          content:
  *            application/json:
  *              schema:
  *                type: object
  *                properties:
- *                  msg:    
- *                    type: string
- *                    example: Authorized
  *                  token:  
  *                    type: string
  *                    example: JWT token ... 
+ *                  uid:    
+ *                    type: string
+ *                    example: uid_string
+ *                  msg:  
+ *                    type: string
+ *                    example: Authorized 
+ *                  
  *        401:
  *          description: Unauthorized
  *          content:
@@ -70,6 +74,7 @@ router.post('/', async function (req, res) {
         } else {
             msg = {
                 token: auth.genToken(result.uid, result.email,),
+                uid: result.uid,
                 msg: "Authorized"
             }
             res.status(200).send(JSON.stringify(msg, null, 4));

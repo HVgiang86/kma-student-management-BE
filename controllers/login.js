@@ -1,4 +1,4 @@
-const User = require('../models/userModel');
+const User = require('../models/user');
 const Crypto = require('../utils/crypto');
 
 
@@ -14,10 +14,8 @@ LoginController = {
             }
             console.log(`user: ${JSON.stringify(user, null, 4)}`)
             var userHashedPassword = user.hashed_password;
-            //var hashed_password = await Crypto.hash(password,user.salt);
             console.log(`userHashedPassword: ${JSON.stringify(userHashedPassword, null, 4)}`)
-            //console.log(`hashed_password: ${JSON.stringify(hashed_password, null, 4)}`)
-            const isPasswordCorrect = await Crypto.comparePassword(password,userHashedPassword);
+            const isPasswordCorrect = await Crypto.comparePassword(password, userHashedPassword);
 
             if (!isPasswordCorrect) {
                 console.log("Password incorrect")
