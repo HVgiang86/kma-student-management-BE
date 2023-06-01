@@ -6,6 +6,7 @@ var logger = require('morgan');
 var db = require('./configs/dbconnection');
 const bodyParser = require('body-parser');
 
+
 db.authenticate().then(() => {
     console.log('Connection has been established successfully.');
 }).catch(err => {
@@ -106,4 +107,6 @@ app.use(function(req, res, next) {
     res.render('error');
   });
 
-module.exports = app;
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}!`)
+  });

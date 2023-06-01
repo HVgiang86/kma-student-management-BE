@@ -69,8 +69,8 @@ router.post('/', async function (req, res) {
             res.status(401).send(JSON.stringify(msg, null, 4));
         } else {
             msg = {
-                msg: "Authorized",
-                token: auth.genToken(result.uid, result.email,)
+                token: auth.genToken(result.uid, result.email,),
+                msg: "Authorized"
             }
             res.status(200).send(JSON.stringify(msg, null, 4));
         }
