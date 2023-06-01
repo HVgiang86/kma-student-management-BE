@@ -48,7 +48,7 @@ const options = {
             bearerAuth: []
         }],
     },
-    apis: ['./routes/users/users.js', './routes/users/roles.js', './routes/users/password.js', './routes/login/login.js', './routes/faculty/faculty.js']
+    apis: ['./routes/users/users.js', './routes/users/roles.js', './routes/users/password.js', './routes/login/login.js', './routes/faculty/faculty.js', './routes/schedule/schedule.js']
 }
 const specs = swaggerJsDoc(options);
 
@@ -71,6 +71,7 @@ var loginRouter = require('./routes/login/login');
 var passwordRouter = require('./routes/users/password');
 var roleRouter = require('./routes/users/roles');
 var facultyRouter = require('./routes/faculty/faculty');
+var scheduleRouter = require('./routes/schedule/schedule');
 
 var app = express();
 
@@ -95,6 +96,7 @@ app.use('/login', loginRouter);
 app.use('/change_password', passwordRouter);
 app.use('/change_role', roleRouter);
 app.use('/faculty', facultyRouter);
+app.use('/schedule', scheduleRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
