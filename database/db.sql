@@ -9,7 +9,7 @@
     
  );
  
-  create table faculty (
+  create table faculties (
 	id varchar(16) primary key,
     faculty_name nvarchar(40)
  );
@@ -26,12 +26,12 @@
     end_time varchar(16)
  );
  
-  create table major (
+  create table majors (
 	id varchar(16) primary key,
     faculty_id varchar(16),
     major_name nvarchar(40),
     
-    foreign key (faculty_id) references faculty(id)
+    foreign key (faculty_id) references faculties(id)
  );
  
  create table users (
@@ -61,15 +61,15 @@
     
     foreign key (uid) references users(uid),
     foreign key (class_id) references student_class(id),
-	foreign key (major_id) references major(id)
+	foreign key (major_id) references majors(id)
  );
  
-  create table lecturer(
+  create table lecturers(
 	id varchar(20) primary key,
     faculty_id varchar(16),
     lecturer_name nvarchar(40),
     
-    foreign key (faculty_id) references faculty(id)
+    foreign key (faculty_id) references faculties(id)
  );
  
  create table subject_class(
@@ -80,7 +80,7 @@
     class_name nvarchar(40),
     
     foreign key (subject_id) references subjects(id),
-    foreign key (lecturer_id) references lecturer(id),
+    foreign key (lecturer_id) references lecturers(id),
     foreign key (schedule_id) references schedules(id)
  );
  
@@ -108,16 +108,16 @@
  
  -- sample data
  -- insert khoa
-insert into faculty (id, faculty_name) values ('faculty1','Cơ bản');
-insert into faculty (id, faculty_name) values ('faculty2','Công nghệ thông tin');
-insert into faculty (id, faculty_name) values ('faculty3','An toàn thông tin');
-insert into faculty (id, faculty_name) values ('faculty4','Điện tử viễn thông');
+insert into faculties (id, faculty_name) values ('faculty1','Cơ bản');
+insert into faculties (id, faculty_name) values ('faculty2','Công nghệ thông tin');
+insert into faculties (id, faculty_name) values ('faculty3','An toàn thông tin');
+insert into faculties (id, faculty_name) values ('faculty4','Điện tử viễn thông');
 
 -- insert chuyên ngành
-insert into major (id, faculty_id, major_name) values ('major1','faculty2','Phát triển phần mềm nhúng');
-insert into major (id, faculty_id, major_name) values ('major2','faculty2','Phát triển phần mềm di động');
-insert into major (id, faculty_id, major_name) values ('major3','faculty3','An toàn mạng');
-insert into major (id, faculty_id, major_name) values ('major4','faculty3','An toàn hệ thống');
+insert into majors (id, faculty_id, major_name) values ('major1','faculty2','Phát triển phần mềm nhúng');
+insert into majors (id, faculty_id, major_name) values ('major2','faculty2','Phát triển phần mềm di động');
+insert into majors (id, faculty_id, major_name) values ('major3','faculty3','An toàn mạng');
+insert into majors (id, faculty_id, major_name) values ('major4','faculty3','An toàn hệ thống');
  
  -- insert user
  -- insert admin
@@ -129,10 +129,10 @@ insert into student_class (id, class_name) values ('AT16D','AT16D');
 insert into student_class (id, class_name) values ('DT4B','DT4B');
 
 -- insert giang vien
-insert into lecturer (id, faculty_id, lecturer_name) values ('GV010001','faculty2','Cao Thanh Vinh');
-insert into lecturer (id, faculty_id, lecturer_name)  values ('GV010002','faculty2','Nguyễn Đào Trường');
-insert into lecturer (id, faculty_id, lecturer_name)  values ('GV010003','faculty2','Lê Đức Thuận');
-insert into lecturer (id, faculty_id, lecturer_name)  values ('GV010004','faculty1','Nguyễn Thị Bích Ngọc');
+insert into lecturers (id, faculty_id, lecturer_name) values ('GV010001','faculty2','Cao Thanh Vinh');
+insert into lecturers (id, faculty_id, lecturer_name)  values ('GV010002','faculty2','Nguyễn Đào Trường');
+insert into lecturers (id, faculty_id, lecturer_name)  values ('GV010003','faculty2','Lê Đức Thuận');
+insert into lecturers (id, faculty_id, lecturer_name)  values ('GV010004','faculty1','Nguyễn Thị Bích Ngọc');
 
 -- insert lich hoc
 insert into schedules (id,start_time,end_time) values ('ca1','7:00','12:30');
@@ -153,15 +153,19 @@ insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) val
 insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('ktct1','ktct','GV010004','ca1','Công nghệ phần mềm 01');
 
 -- insert user
+insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
+values ('7760636423614133','$2b$10$CU2YdkTwfaum391rHZ0jJu70ACvIMm1g/O9c4DCi7HtQtgYvIM4tu','Hoang Van','Giang','admin@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','admin');
 
+insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
+values ('d871b2a935f14b17','$2b$10$2kBT.C.sGFR0bRd1xRYxM.gxpXlzoasMRGweWFJMwxzGCMwmgkj6q','Hoang Van','Giang','student@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','student');
 
 
 select * from student;
  select * from users;
- select * from major;
- select * from faculty;
+ select * from majors;
+ select * from faculties;
  select * from subjects; 
- select * from lecturer;
+ select * from lecturers;
  select * from score;
  select * from subject_class;
  select * from schedules;

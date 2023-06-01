@@ -195,7 +195,7 @@ const auth = require('../../middleware/authMiddleware')
 
 /**
  * @swagger
- * /users:
+ * /users/all:
  *   get:
  *     security:
  *        - bearerAuth: []
@@ -203,7 +203,7 @@ const auth = require('../../middleware/authMiddleware')
  *     description: Get all users
  *     responses:
  *        200:
- *          description: Created user
+ *          description: Success
  *          content:
  *            application/json:
  *              schema:
@@ -231,8 +231,8 @@ const auth = require('../../middleware/authMiddleware')
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/', auth.isAuth, async function (req, res, next) {
-  console.log("GET /users");
+router.get('/all', auth.isAuth, async function (req, res, next) {
+  console.log("GET /users/all");
   try {
     if (req.user.role_name !== 'admin') {
       msg = { msg: "Unauthorized. Forbidden" }
@@ -243,6 +243,66 @@ router.get('/', auth.isAuth, async function (req, res, next) {
     const result = await controller.getUserList();
     if (result && result.length > 0) {
       const display = result.map(user => controller.copyUserWithoutPassword(user));
+      res.status(200).send(JSON.stringify(display, null, 4));
+    } else {
+      msg = { msg: "No Account Found" }
+      res.status(404).send(JSON.stringify(msg, null, 4));
+    }
+  } catch (err) {
+    console.log('An error occurred:', err);
+    msg = { msg: "Internal server error" }
+    res.status(500).send(JSON.stringify(msg, null, 4));
+  }
+
+});
+
+
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Get user info
+ *     description: Get user info
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                items:
+ *                  $ref: '#/components/schemas/DisplayUsers'
+ *        404:
+ *          description: No Account Found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: No Account Found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+router.get('/', auth.isAuth, async function (req, res, next) {
+  console.log("GET /users");
+  try {
+    const requestedUserId = req.user.uid;
+
+    const result = await controller.getUserInfo(requestedUserId);
+    if (result) {
+      const display = controller.copyUserWithoutPassword(result);
       res.status(200).send(JSON.stringify(display, null, 4));
     } else {
       msg = { msg: "No Account Found" }
@@ -276,7 +336,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *                  example: 123456789
  *     responses:
  *        200:
- *          description: Created user
+ *          description: Success
  *          content:
  *            application/json:
  *              schema:
@@ -348,7 +408,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *              $ref: '#/components/schemas/ToUpdateUsers'
  *     responses:
  *        200:
- *          description: Created user
+ *          description: Success
  *          content:
  *            application/json:
  *              schema:
@@ -451,7 +511,7 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *              $ref: '#/components/schemas/ToCreateUsers'
  *     responses:
  *        200:
- *          description: Created user
+ *          description: Success
  *          content:
  *            application/json:
  *              schema:
@@ -495,7 +555,7 @@ router.post('/', async function (req, res, next) {
       msg = { msg: "Internal server error" }
       res.status(400).send(JSON.stringify(msg, null, 4));
     }
-  
+
     const email = req.body.email
     const password = req.body.password
     const first_name = req.body.first_name;
@@ -509,19 +569,19 @@ router.post('/', async function (req, res, next) {
     const gender = req.body.gender;
     const role = req.body.role;
     const nation = req.body.nation;
-  
+
     const user = {
       email: email, password: password, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth, citizen_id: citizen_id,
       religion: religion, nationality: nationality, gender: gender, role: role, nation: nation
     }
-  
+
     //justify
     for (let key in user) {
       if (user[key] === undefined) {
         user[key] = "";
       }
     }
-  
+
     if (user.email.length == 0 || user.password.length == 0 || user.first_name.length == 0 || user.last_name.length == 0 || user.role.length == 0 || user.gender.length == 0) {
       msg = { msg: "Internal server error" }
       res.status(400).send(JSON.stringify(msg, null, 4));

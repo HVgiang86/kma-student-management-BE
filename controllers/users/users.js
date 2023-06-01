@@ -1,4 +1,4 @@
-const User = require('../../models/userModel');
+const User = require('../../models/user');
 const Crypto = require('../../utils/crypto');
 const { v4: uuidv4 } = require('uuid');
 
@@ -58,6 +58,16 @@ UserController = {
         try {
             const result = await User.findAll();
             console.log("Controller: Get user list: " + JSON.stringify(result, null, 4));
+            return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
+    getUserInfo: async (id) => {
+        try {
+            const result = await User.findOne({where: {uid: id}});
+            console.log("Controller: Get user info: " + JSON.stringify(result, null, 4));
             return result;
         } catch (err) {
             console.log("An error occurred: " + err);

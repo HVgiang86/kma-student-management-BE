@@ -12,6 +12,11 @@ db.authenticate().then(() => {
 }).catch(err => {
     console.error(err);
 })
+db.sync().then(() => {
+    console.log('Database sync has completed successfully');
+}).catch(err => {
+    console.error(err);
+});
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -43,7 +48,7 @@ const options = {
             bearerAuth: []
         }],
     },
-    apis: ['./routes/users/users.js', './routes/users/roles.js', './routes/users/password.js', './routes/login/login.js']
+    apis: ['./routes/users/users.js', './routes/users/roles.js', './routes/users/password.js', './routes/login/login.js', './routes/faculty/faculty.js']
 }
 const specs = swaggerJsDoc(options);
 
@@ -65,6 +70,7 @@ var usersRouter = require('./routes/users/users');
 var loginRouter = require('./routes/login/login');
 var passwordRouter = require('./routes/users/password');
 var roleRouter = require('./routes/users/roles');
+var facultyRouter = require('./routes/faculty/faculty');
 
 var app = express();
 
@@ -88,6 +94,7 @@ app.use('/users', usersRouter);
 app.use('/login', loginRouter);
 app.use('/change_password', passwordRouter);
 app.use('/change_role', roleRouter);
+app.use('/faculty', facultyRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
