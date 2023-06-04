@@ -1,5 +1,5 @@
 const sequelize = require('../configs/dbconnection');
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const subject = require('./subject');
 const lecturer = require('./lecturer');
 const schedule = require('./schedule');
@@ -13,10 +13,10 @@ const model = sequelize.define('subject_class', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.hasOne(subject, {foreignKey: 'subject_id'})
-model.hasOne(lecturer, {foreignKey: 'lecturer_id'})
-model.hasOne(schedule, {foreignKey: 'schedule_id'})
+model.belongsTo(subject, { foreignKey: 'subject_id' })
+model.hasOne(lecturer, { foreignKey: 'id' })
+model.hasOne(schedule, { foreignKey: 'id' })
 
 module.exports = model;

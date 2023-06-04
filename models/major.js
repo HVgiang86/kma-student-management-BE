@@ -11,8 +11,8 @@ const model = sequelize.define('major', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.belongsTo(faculty, {foreignKey: 'faculty_id'})
+model.belongsTo(faculty, { foreignKey: 'faculty_id' })
 
 module.exports = model;

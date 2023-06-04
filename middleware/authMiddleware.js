@@ -38,7 +38,41 @@ authMiddleware = {
             msg = { msg: "Unauthorized, no token" }
             res.status(401).send(JSON.stringify(msg, null, 4));
         }
+    },
+    isAdmin: async (req, res, next) => {
+        let token;
+        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+            try {
+                token = req.headers.authorization.split(' ')[1];
+                const decoded = jwt.verify(token, secretKey);
+
+                const uid = decoded.uid;
+                const email = decoded.email;
+
+                const result = await User.findOne({ where: { uid: uid, email: email } })
+                if (!result) {
+                    msg = { msg: "Unauthorized, token failed" }
+                    res.status(401).send(JSON.stringify(msg, null, 4));
+                } else {
+                    req.user = result;
+                    if (result.role_name !== 'admin') {
+                        msg = { msg: "Unauthorized. Forbidden. Admin required" }
+                        res.status(403).send(JSON.stringify(msg, null, 4));
+                    } else {
+                        next();
+                    }
+                }
+            } catch (err) {
+                console.log('An error occurred:', err);
+                msg = { msg: "Internal server error" }
+                res.status(500).send(JSON.stringify(msg, null, 4));
+            }
+        } else {
+            msg = { msg: "Unauthorized, no token" }
+            res.status(401).send(JSON.stringify(msg, null, 4));
+        }
     }
+
 }
 
 module.exports = authMiddleware;

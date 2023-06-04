@@ -86,7 +86,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *       - bearerAuth: []
- *     summary: Get faculty info by id 
+ *     summary: Get faculty info by id  
  *     description: Get faculty info by id. Cay vcđ. API này đang không biết documenting kiểu gì :)) Hiểu đơn giản là nó là tham số trong URL
  *     responses:
  *       200:

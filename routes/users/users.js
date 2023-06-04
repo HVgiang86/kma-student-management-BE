@@ -3,8 +3,6 @@ var router = express.Router();
 const controller = require('../../controllers/users/users');
 const auth = require('../../middleware/authMiddleware')
 
-
-
 /**
  * @swagger
  * components:
@@ -231,14 +229,9 @@ const auth = require('../../middleware/authMiddleware')
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/all', auth.isAuth, async function (req, res, next) {
+router.get('/all', auth.isAdmin, async function (req, res, next) {
   console.log("GET /users/all");
   try {
-    if (req.user.role_name !== 'admin') {
-      msg = { msg: "Unauthorized. Forbidden" }
-      res.status(403).send(JSON.stringify(msg, null, 4));
-      return;
-    }
 
     const result = await controller.getUserList();
     if (result && result.length > 0) {

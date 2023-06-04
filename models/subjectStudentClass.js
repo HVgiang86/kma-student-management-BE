@@ -9,9 +9,9 @@ const model = sequelize.define('student_subject_class', {
         type: DataTypes.STRING,
         primaryKey: true,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.hasOne(subject_class, {foreignKey: 'subject_class_id'})
-model.hasOne(students, {foreignKey: 'student_id'})
+model.belongsTo(subject_class, { foreignKey: 'subject_class_id' })
+model.belongsTo(students, { foreignKey: 'student_id' })
 
 module.exports = model;

@@ -1,5 +1,5 @@
 const sequelize = require('../configs/dbconnection');
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const subject = require('./subject');
 const student = require('./student');
@@ -15,9 +15,9 @@ const model = sequelize.define('major', {
     HK: {
         type: DataTypes.FLOAT,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.belongsTo(subject, {foreignKey: 'subject_id'})
-model.belongsTo(student, {foreignKey: 'student_id'});
+model.belongsTo(subject, { foreignKey: 'subject_id' })
+model.belongsTo(student, { foreignKey: 'student_id' });
 
 module.exports = model;

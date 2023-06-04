@@ -4,21 +4,21 @@ const { v4: uuidv4 } = require('uuid');
 
 UserController = {
     create: async (user) => {
-        const email = user.email
-        const password = user.password
-        const first_name = user.first_name;
-        const last_name = user.last_name;
-        const phone_number = user.phone_number;
-        const address = user.address;
-        const date_of_birth = user.date_of_birth;
-        const citizen_id = user.citizen_id;
-        const religion = user.religion;
-        const nationality = user.nationality;
-        const gender = user.gender;
-        const role = user.role;
-        const nation = user.nation;
-
         try {
+            const email = user.email
+            const password = user.password
+            const first_name = user.first_name;
+            const last_name = user.last_name;
+            const phone_number = user.phone_number;
+            const address = user.address;
+            const date_of_birth = user.date_of_birth;
+            const citizen_id = user.citizen_id;
+            const religion = user.religion;
+            const nationality = user.nationality;
+            const gender = user.gender;
+            const role = user.role;
+            const nation = user.nation;
+
             const uuid = uuidv4(16);
             const uid = uuid.replace(/-/g, '').substring(0, 16);
 
@@ -66,7 +66,7 @@ UserController = {
     },
     getUserInfo: async (id) => {
         try {
-            const result = await User.findOne({where: {uid: id}});
+            const result = await User.findOne({ where: { uid: id } });
             console.log("Controller: Get user info: " + JSON.stringify(result, null, 4));
             return result;
         } catch (err) {
@@ -90,9 +90,9 @@ UserController = {
     },
 
     updateUser: async (user) => {
-        const uid = user.uid;
-
         try {
+            const uid = user.uid;
+
             console.log(`uid: ${user.uid}`)
 
             const userToUpdate = await User.findOne({ where: { uid: uid } });
@@ -125,7 +125,7 @@ UserController = {
 
             const isCorrectOldPassword = await Crypto.comparePassword(old_password, userToUpdate.hashed_password)
 
-            if(!isCorrectOldPassword){
+            if (!isCorrectOldPassword) {
                 return 401;
             }
 
@@ -188,15 +188,15 @@ UserController = {
         try {
             return {
                 uid: user.uid,
-                first_name: user.first_name, 
-                last_name: user.last_name, 
+                first_name: user.first_name,
+                last_name: user.last_name,
                 email: user.email,
                 phone_number: user.phone_number,
                 address: user.address,
                 date_of_birth: user.date_of_birth,
                 citizen_id: user.citizen_id,
-                nation: user.nation,    
-                religion: user.religion,    
+                nation: user.nation,
+                religion: user.religion,
                 nationality: user.nationality,
                 gender: user.gender,
                 role_name: user.role_name

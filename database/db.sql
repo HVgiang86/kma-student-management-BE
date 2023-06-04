@@ -72,7 +72,7 @@
     foreign key (faculty_id) references faculties(id)
  );
  
- create table subject_class(
+ create table subject_classes(
 	id varchar(16) primary key,
     subject_id varchar(16),
     lecturer_id varchar(16),
@@ -92,7 +92,7 @@
     subject_class_id varchar(16),
     
     foreign key (student_id) references student(id),
-    foreign key (subject_class_id) references subject_class(id)
+    foreign key (subject_class_id) references subject_classes(id)
  );
  
  create table score(
@@ -146,11 +146,11 @@ insert into subjects (id,credits,subject_name) values ('ltw','2','Lập trình w
 
 -- insert subject class
 
-insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('cnpm1','cnpm','GV010001','ca1','Công nghệ phần mềm 01');
-insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('cnpm2','cnpm','GV010002','ca2','Công nghệ phần mềm 02');
-insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('ltw1','ltw','GV010002','ca2','Lập trình web 01');
-insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('ltw2','ltw','GV010003','ca3','Lập trình web 02');
-insert into subject_class (id,subject_id,lecturer_id,schedule_id,class_name) values('ktct1','ktct','GV010004','ca1','Công nghệ phần mềm 01');
+insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) values('cnpm1','cnpm','GV010001','ca1','Công nghệ phần mềm 01');
+insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) values('cnpm2','cnpm','GV010002','ca2','Công nghệ phần mềm 02');
+insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) values('ltw1','ltw','GV010002','ca2','Lập trình web 01');
+insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) values('ltw2','ltw','GV010003','ca3','Lập trình web 02');
+insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) values('ktct1','ktct','GV010004','ca1','Công nghệ phần mềm 01');
 
 -- insert user
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
@@ -167,7 +167,7 @@ select * from student;
  select * from subjects; 
  select * from lecturers;
  select * from score;
- select * from subject_class;
+ select * from subject_classes;
  select * from schedules;
  select * from student_subject_class;
  select * from student_class;
