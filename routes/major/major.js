@@ -1,37 +1,38 @@
 var express = require('express');
 var router = express.Router();
-const controller = require('../../controllers/schedule/schedule');
+const controller = require('../../controllers/major/major');
 const auth = require('../../middleware/authMiddleware')
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Schedule:
+ *     Major:
  *       type: object
  *       properties:
  *          id:
  *            type: string
- *            description: uid
- *            example: ca1
- *          start_time:
+ *            description: id
+ *            example: cntt
+ *          major_name:
  *            type: string
- *            description: first_name
- *            example: 12:30
- *          end_time:
+ *            description: major name
+ *            example: Công nghệ thông tin
+ *          faculty_id:
  *            type: string
- *            description: last_name
- *            example: 18:00
+ *            description: faculty id
+ *            example: cntt
  */
+
 
 /**
  * @swagger
- * /schedule:
+ * /major:
  *   get:
  *     security:
  *        - bearerAuth: []
- *     summary: Get all schedule 
- *     description: Get all schedule
+ *     summary: Get all majors 
+ *     description: Get all majors
  *     responses:
  *        200:
  *          description: Success
@@ -40,9 +41,9 @@ const auth = require('../../middleware/authMiddleware')
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/Schedule'
+ *                  $ref: '#/components/schemas/Major'
  *        404:
- *          description: Schedule not found
+ *          description: Major not found
  *          content:
  *            application/json:
  *              schema:
@@ -50,7 +51,7 @@ const auth = require('../../middleware/authMiddleware')
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule not found
+ *                    example: Major not found
  *        500:
  *          description: Internal server error
  *          content:
@@ -62,15 +63,15 @@ const auth = require('../../middleware/authMiddleware')
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/', auth.isAuth, async function (req, res, next) {
+router.get('/', async (req, res) => {
     try {
-        const result = await controller.getScheduleList();
+        const result = await controller.getMajorList();
 
         if (result && result.length > 0) {
-            console.log("Schedule list: " + JSON.stringify(result, null, 4));
+            console.log("Major list: " + JSON.stringify(result, null, 4));
             res.status(200).send(JSON.stringify(result, null, 4));
         } else {
-            msg = { msg: "Schedule not found" }
+            msg = { msg: "Major not found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
         }
     } catch (err) {
@@ -78,111 +79,23 @@ router.get('/', auth.isAuth, async function (req, res, next) {
         msg = { msg: "Internal server error" }
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
+
 });
 
 /**
  * @swagger
- * /schedule:
- *   put:
- *     security:
- *        - bearerAuth: []
- *     summary: Upadate a schedule 
- *     description: Upadate a schedule 
- *     requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Schedule'
- *     responses:
- *        200:
- *          description: Success
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                items:
- *                  $ref: '#/components/schemas/Schedule'
- *        400:
- *          description: Invalid input
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  msg:
- *                    type: string
- *                    example: Invalid input
- *        404:
- *          description: Schedule not found
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  msg:
- *                    type: string
- *                    example: Schedule not found
- *        500:
- *          description: Internal server error
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  msg:
- *                    type: string
- *                    example: Internal server error
- */
-router.put('/', async function (req, res, next) {
-    try {
-        const id = req.body.id;
-        const start_time = req.body.start_time;
-        const end_time = req.body.end_time;
-
-        schedule = {
-            id: id,
-            start_time: start_time,
-            end_time: end_time
-        }
-
-        if (!id || !start_time || !end_time) {
-            msg = { msg: "Invalid input" }
-            res.status(400).send(JSON.stringify(msg, null, 4));
-            return;
-        }
-
-        const result = await controller.update(schedule);
-
-        if (result) {
-            console.log("Schedule updated: " + JSON.stringify(result, null, 4));
-            res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "Schedule not found" }
-            res.status(404).send(JSON.stringify(msg, null, 4));
-        }
-
-    } catch (err) {
-        console.log('An error occurred:', err);
-        msg = { msg: "Internal server error" }
-        res.status(500).send(JSON.stringify(msg, null, 4));
-    }
-});
-
-/**
- * @swagger
- * /schedule:
+ * /major:
  *   post:
  *     security:
  *        - bearerAuth: []
- *     summary: Create a schedule 
- *     description: Create a schedule 
+ *     summary: Create a major 
+ *     description: Create a major 
  *     requestBody:
  *        required: true
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Schedule'
+ *              $ref: '#/components/schemas/Major'
  *     responses:
  *        200:
  *          description: Success
@@ -191,7 +104,7 @@ router.put('/', async function (req, res, next) {
  *              schema:
  *                type: object
  *                items:
- *                  $ref: '#/components/schemas/Schedule'
+ *                  $ref: '#/components/schemas/Major'
  *        404:
  *          description: Invalid input
  *          content:
@@ -203,7 +116,7 @@ router.put('/', async function (req, res, next) {
  *                    type: string
  *                    example: Invalid input
  *        409:
- *          description: Schedule already exists
+ *          description: Major already exists
  *          content:
  *            application/json:
  *              schema:
@@ -211,7 +124,7 @@ router.put('/', async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule already exists
+ *                    example: Major already exists
  *        500:
  *          description: Internal server error
  *          content:
@@ -223,59 +136,54 @@ router.put('/', async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.post('/', auth.isAuth, async function (req, res, next) {
+router.post('/', async (req, res) => {
     try {
         const id = req.body.id;
-        const start_time = req.body.start_time;
-        const end_time = req.body.end_time;
+        const major_name = req.body.major_name;
+        const faculty_id = req.body.faculty_id;
 
-        schedule = {
-            id: id,
-            start_time: start_time,
-            end_time: end_time
-        }
-
-        if (!id || !start_time || !end_time) {
+        if (!id || !major_name || !faculty_id) {
             msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
 
-        const result = await controller.create(schedule);
-
-        if (result) {
-            console.log("Schedule created: " + JSON.stringify(result, null, 4));
-            res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "Schedule already exists" }
-            res.status(409).send(JSON.stringify(msg, null, 4));
+        major = {
+            id: id,
+            major_name: major_name,
+            faculty_id: faculty_id
         }
 
+        const result = await controller.create(major);
+        if (result) {
+            console.log("Create major: " + JSON.stringify(result, null, 4));
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "Major already exists" }
+            res.status(409).send(JSON.stringify(msg, null, 4));
+        }
     } catch (err) {
         console.log('An error occurred:', err);
         msg = { msg: "Internal server error" }
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
+
 });
 
 /**
  * @swagger
- * /schedule:
- *   delete:
+ * /major:
+ *   put:
  *     security:
  *        - bearerAuth: []
- *     summary: Delete a schedule by id
- *     description: Delete a schedule by id
+ *     summary: Upadate a Major 
+ *     description: Upadate a Major 
  *     requestBody:
  *        required: true
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                id:
- *                  type: string
- *                  example: ca1
+ *              $ref: '#/components/schemas/Major'
  *     responses:
  *        200:
  *          description: Success
@@ -283,10 +191,8 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *            application/json:
  *              schema:
  *                type: object
- *              properties:
- *                msg:
- *                  type: string
- *                  example: Schedule deleted
+ *                items:
+ *                  $ref: '#/components/schemas/Major'
  *        400:
  *          description: Invalid input
  *          content:
@@ -298,7 +204,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Invalid input
  *        404:
- *          description: Schedule not found
+ *          description: Major not found
  *          content:
  *            application/json:
  *              schema:
@@ -306,7 +212,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule not found
+ *                    example: Major not found
  *        500:
  *          description: Internal server error
  *          content:
@@ -318,29 +224,120 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.delete('/', auth.isAuth, async function (req, res, next) {
+router.put('/', async (req, res) => {
     try {
         const id = req.body.id;
+        const major_name = req.body.major_name;
+        const faculty_id = req.body.faculty_id;
 
-        if (!id) {
+        if (!id || !major_name || !faculty_id) {
             msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
+            return;
         }
 
-        const result = controller.delete(id);
+        major = {
+            id: id,
+            major_name: major_name,
+            faculty_id: faculty_id
+        }
 
-        if (!result) {
-            msg = { msg: "Schedule not found" }
-            res.status(404).send(JSON.stringify(msg, null, 4));
+        const result = await controller.update(major);
+
+        if (result) {
+            console.log("Update major: " + JSON.stringify(result, null, 4));
+            res.status(200).send(JSON.stringify(result, null, 4));
         } else {
-            msg = { msg: "Schedule deleted" }
-            res.status(200).send(JSON.stringify(msg, null, 4));
+            msg = { msg: "Major not found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
         }
     } catch (err) {
         console.log('An error occurred:', err);
         msg = { msg: "Internal server error" }
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
+
 });
+
+/**
+ * @swagger
+ * /major:
+ *   delete:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Delete a major by id
+ *     description: Delete a major by id
+ *     requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                id:
+ *                  type: string
+ *                  example: ktmt
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *              properties:
+ *                msg:
+ *                  type: string
+ *                  example: Major deleted
+ *        400:
+ *          description: Invalid input
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Invalid input
+ *        404:
+ *          description: Major not found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Major not found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+router.delete('/', async (req, res) => {
+    try {
+        const id = req.body.id;
+
+        const result = await controller.delete(id);
+        if (result) {
+            msg = { msg: "Delete major successfully" }
+            res.status(200).send(JSON.stringify(msg, null, 4));
+        } else {
+            msg = { msg: "Major not found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+
+});
+
 
 module.exports = router;

@@ -14,6 +14,6 @@ const model = sequelize.define('schedules', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
 module.exports = model;

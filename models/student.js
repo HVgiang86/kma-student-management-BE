@@ -1,7 +1,7 @@
 const sequelize = require('../configs/dbconnection');
 const { DataTypes } = require('sequelize');
 const user = require('./user');
-const student_class = require('./student_class');
+const student_class = require('./studentClass');
 const major = require('./major');
 
 const model = sequelize.define('student', {
@@ -17,10 +17,10 @@ const model = sequelize.define('student', {
         type: DataTypes.INTEGER,
         allowNull: true,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.hasOne(user, {foreignKey: 'uid'})
-model.belongsTo(student_class, {foreignKey: 'class_id'});
-model.belongsTo(major, {foreignKey: 'major_id'});
+model.hasOne(user, { foreignKey: 'uid' })
+model.belongsTo(student_class, { foreignKey: 'class_id' });
+model.belongsTo(major, { foreignKey: 'major_id' });
 
 module.exports = model;

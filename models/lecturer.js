@@ -1,5 +1,5 @@
 const sequelize = require('../configs/dbconnection');
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const faculty = require('./faculty');
 
 const model = sequelize.define('lecturer', {
@@ -11,8 +11,8 @@ const model = sequelize.define('lecturer', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
-model.belongsTo(faculty, {foreignKey: 'faculty_id'});
+model.belongsTo(faculty, { foreignKey: 'faculty_id' });
 
 module.exports = model;

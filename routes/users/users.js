@@ -3,8 +3,6 @@ var router = express.Router();
 const controller = require('../../controllers/users/users');
 const auth = require('../../middleware/authMiddleware')
 
-
-
 /**
  * @swagger
  * components:

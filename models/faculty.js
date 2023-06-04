@@ -10,7 +10,7 @@ const model = sequelize.define('faculty', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
 
 module.exports = model;

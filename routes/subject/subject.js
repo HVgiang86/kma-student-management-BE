@@ -1,37 +1,37 @@
 var express = require('express');
 var router = express.Router();
-const controller = require('../../controllers/schedule/schedule');
+const controller = require('../../controllers/subject/subject');
 const auth = require('../../middleware/authMiddleware')
 
 /**
  * @swagger
  * components:
  *   schemas:
- *     Schedule:
+ *     Subject:
  *       type: object
  *       properties:
  *          id:
  *            type: string
- *            description: uid
- *            example: ca1
- *          start_time:
+ *            description: id
+ *            example: ktmt
+ *          credits:
+ *            type: integer
+ *            description: credits of subject
+ *            example: 2
+ *          subject_name:
  *            type: string
- *            description: first_name
- *            example: 12:30
- *          end_time:
- *            type: string
- *            description: last_name
- *            example: 18:00
+ *            description: subject name
+ *            example: Kiến trúc máy tính
  */
 
 /**
  * @swagger
- * /schedule:
+ * /subject:
  *   get:
  *     security:
  *        - bearerAuth: []
- *     summary: Get all schedule 
- *     description: Get all schedule
+ *     summary: Get all subjects 
+ *     description: Get all subjects
  *     responses:
  *        200:
  *          description: Success
@@ -40,9 +40,9 @@ const auth = require('../../middleware/authMiddleware')
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/Schedule'
+ *                  $ref: '#/components/schemas/Subject'
  *        404:
- *          description: Schedule not found
+ *          description: Subject not found
  *          content:
  *            application/json:
  *              schema:
@@ -50,7 +50,7 @@ const auth = require('../../middleware/authMiddleware')
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule not found
+ *                    example: Subject not found
  *        500:
  *          description: Internal server error
  *          content:
@@ -62,15 +62,15 @@ const auth = require('../../middleware/authMiddleware')
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/', auth.isAuth, async function (req, res, next) {
+router.get('/', auth.isAuth, auth.isAuth, async function (req, res, next) {
     try {
-        const result = await controller.getScheduleList();
+        const result = await controller.getSubjectList();
 
         if (result && result.length > 0) {
-            console.log("Schedule list: " + JSON.stringify(result, null, 4));
+            console.log("Subject list: " + JSON.stringify(result, null, 4));
             res.status(200).send(JSON.stringify(result, null, 4));
         } else {
-            msg = { msg: "Schedule not found" }
+            msg = { msg: "Subject not found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
         }
     } catch (err) {
@@ -78,11 +78,12 @@ router.get('/', auth.isAuth, async function (req, res, next) {
         msg = { msg: "Internal server error" }
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
+
 });
 
 /**
  * @swagger
- * /schedule:
+ * /subject:
  *   put:
  *     security:
  *        - bearerAuth: []
@@ -93,7 +94,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Schedule'
+ *              $ref: '#/components/schemas/Subject'
  *     responses:
  *        200:
  *          description: Success
@@ -102,7 +103,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *              schema:
  *                type: object
  *                items:
- *                  $ref: '#/components/schemas/Schedule'
+ *                  $ref: '#/components/schemas/Subject'
  *        400:
  *          description: Invalid input
  *          content:
@@ -114,7 +115,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Invalid input
  *        404:
- *          description: Schedule not found
+ *          description: Subject not found
  *          content:
  *            application/json:
  *              schema:
@@ -122,7 +123,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule not found
+ *                    example: Subject not found
  *        500:
  *          description: Internal server error
  *          content:
@@ -134,34 +135,33 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.put('/', async function (req, res, next) {
+router.put('/', auth.isAuth, async function (req, res, next) {
     try {
         const id = req.body.id;
-        const start_time = req.body.start_time;
-        const end_time = req.body.end_time;
+        const credits = req.body.credits;
+        const subject_name = req.body.subject_name;
 
-        schedule = {
+        subject = {
             id: id,
-            start_time: start_time,
-            end_time: end_time
+            credits: credits,
+            subject_name: subject_name
         }
 
-        if (!id || !start_time || !end_time) {
+        if (!id || !credits || !subject_name) {
             msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
 
-        const result = await controller.update(schedule);
+        const result = await controller.update(subject);
 
         if (result) {
-            console.log("Schedule updated: " + JSON.stringify(result, null, 4));
+            console.log("Update subject: " + JSON.stringify(result, null, 4));
             res.status(200).send(JSON.stringify(result, null, 4));
         } else {
-            msg = { msg: "Schedule not found" }
+            msg = { msg: "Subject not found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
         }
-
     } catch (err) {
         console.log('An error occurred:', err);
         msg = { msg: "Internal server error" }
@@ -171,18 +171,18 @@ router.put('/', async function (req, res, next) {
 
 /**
  * @swagger
- * /schedule:
+ * /subject:
  *   post:
  *     security:
  *        - bearerAuth: []
- *     summary: Create a schedule 
- *     description: Create a schedule 
+ *     summary: Create a subject 
+ *     description: Create a subject 
  *     requestBody:
  *        required: true
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Schedule'
+ *              $ref: '#/components/schemas/Subject'
  *     responses:
  *        200:
  *          description: Success
@@ -191,7 +191,7 @@ router.put('/', async function (req, res, next) {
  *              schema:
  *                type: object
  *                items:
- *                  $ref: '#/components/schemas/Schedule'
+ *                  $ref: '#/components/schemas/Subject'
  *        404:
  *          description: Invalid input
  *          content:
@@ -203,7 +203,7 @@ router.put('/', async function (req, res, next) {
  *                    type: string
  *                    example: Invalid input
  *        409:
- *          description: Schedule already exists
+ *          description: Subject already exists
  *          content:
  *            application/json:
  *              schema:
@@ -211,7 +211,7 @@ router.put('/', async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule already exists
+ *                    example: Subject already exists
  *        500:
  *          description: Internal server error
  *          content:
@@ -226,30 +226,30 @@ router.put('/', async function (req, res, next) {
 router.post('/', auth.isAuth, async function (req, res, next) {
     try {
         const id = req.body.id;
-        const start_time = req.body.start_time;
-        const end_time = req.body.end_time;
+        const credits = req.body.credits;
+        const subject_name = req.body.subject_name;
 
-        schedule = {
+        subject = {
             id: id,
-            start_time: start_time,
-            end_time: end_time
+            credits: credits,
+            subject_name: subject_name
         }
 
-        if (!id || !start_time || !end_time) {
+        if (!id || !credits || !subject_name) {
             msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
 
-        const result = await controller.create(schedule);
-
+        const result = await controller.create(subject);
         if (result) {
-            console.log("Schedule created: " + JSON.stringify(result, null, 4));
+            console.log("Create subject: " + JSON.stringify(result, null, 4));
             res.status(200).send(JSON.stringify(result, null, 4));
         } else {
-            msg = { msg: "Schedule already exists" }
+            msg = { msg: "Subject already exists" }
             res.status(409).send(JSON.stringify(msg, null, 4));
         }
+
 
     } catch (err) {
         console.log('An error occurred:', err);
@@ -260,12 +260,12 @@ router.post('/', auth.isAuth, async function (req, res, next) {
 
 /**
  * @swagger
- * /schedule:
+ * /subject:
  *   delete:
  *     security:
  *        - bearerAuth: []
- *     summary: Delete a schedule by id
- *     description: Delete a schedule by id
+ *     summary: Delete a subject by id
+ *     description: Delete a subject by id
  *     requestBody:
  *        required: true
  *        content:
@@ -275,7 +275,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *              properties:
  *                id:
  *                  type: string
- *                  example: ca1
+ *                  example: ktmt
  *     responses:
  *        200:
  *          description: Success
@@ -286,7 +286,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *              properties:
  *                msg:
  *                  type: string
- *                  example: Schedule deleted
+ *                  example: Subject deleted
  *        400:
  *          description: Invalid input
  *          content:
@@ -298,7 +298,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Invalid input
  *        404:
- *          description: Schedule not found
+ *          description: Subject not found
  *          content:
  *            application/json:
  *              schema:
@@ -306,7 +306,7 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Schedule not found
+ *                    example: Subject not found
  *        500:
  *          description: Internal server error
  *          content:
@@ -327,14 +327,19 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
             res.status(400).send(JSON.stringify(msg, null, 4));
         }
 
-        const result = controller.delete(id);
-
-        if (!result) {
+        const result = await controller.delete(id);
+        if (result === 400) {
+            msg = { msg: "Bad request. This subject has classes" }
+            res.status(400).send(JSON.stringify(msg, null, 4));
+        } else if (result === 404) {
             msg = { msg: "Schedule not found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
-        } else {
+        } else if (result === 200) {
             msg = { msg: "Schedule deleted" }
             res.status(200).send(JSON.stringify(msg, null, 4));
+        } else {
+            msg = { msg: "Internal server error" }
+            res.status(500).send(JSON.stringify(msg, null, 4));
         }
     } catch (err) {
         console.log('An error occurred:', err);
@@ -342,5 +347,4 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
 });
-
 module.exports = router;

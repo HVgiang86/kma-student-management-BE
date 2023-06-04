@@ -1,5 +1,5 @@
 const sequelize = require('../configs/dbconnection');
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const model = sequelize.define('subjects', {
     id: {
@@ -14,6 +14,6 @@ const model = sequelize.define('subjects', {
         type: DataTypes.STRING,
         allowNull: false,
     }
-}, {timestamps: false});
+}, { timestamps: false });
 
 module.exports = model;

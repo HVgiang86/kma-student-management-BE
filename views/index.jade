@@ -118,8 +118,8 @@ html(lang='en')
     hr
     h2#api-docs API - Docs
     p
-      button.button.button1(type='button' onclick='https://kma-student-management-api.onrender.com/api-docs/')
-        a(href='https://kma-student-management-api.onrender.com/api-docs/')
+      button#apidocbutton.button.button1(type='button' onclick='redirect()')
+        a#atagredirect(href='#' onclick='redirect()')
           | API
           | Docs Click here
     h2 Cách Authorize xem hướng dẫn dưới đây
@@ -178,3 +178,7 @@ html(lang='en')
       slides[slideIndex - 1].style.display = "block";
       dots[slideIndex - 1].className += " active";
       }
+      function redirect(){
+      window.location.href = "/api-docs";
+      }
+      
