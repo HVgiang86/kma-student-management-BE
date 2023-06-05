@@ -1,12 +1,13 @@
 const sequelize = require('../configs/dbconnection');
-const { Sequelize, DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 const students = require('./student');
 const subject_class = require('./subjectClass');
 
 const model = sequelize.define('student_subject_class', {
     id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     }
 }, { timestamps: false });

@@ -339,5 +339,63 @@ router.delete('/', async (req, res) => {
 
 });
 
+/**
+ * @swagger
+ * /major/{id}/student:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Get all students of major 
+ *     description: Get all students of major 
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Student'
+ *        404:
+ *          description: Student or Major not found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example:  Student or Major  not found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+//lay danh sach sinh vien chuyen nganh
+router.get('/:id/student', async (req, res) => {
+    console.log("Get student list of major: " + req.params.id);
+    try {
+        const id = req.params.id;
+
+        const result = await controller.getStudentListByMajorId(id);
+        if (result && result.length > 0) {
+            console.log("Student list: " + JSON.stringify(result, null, 4));
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "Student or Major not found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+});
 
 module.exports = router;

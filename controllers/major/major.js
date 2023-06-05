@@ -83,6 +83,16 @@ MajorController = {
             console.log("An error occurred: " + err);
             throw new Error(err);
         }
+    },
+    getStudentListByMajorId: async (id) => {
+        try {
+            const result = await Student.findAll({ where: { major_id: id } });
+            console.log("Controller: Get student list: " + JSON.stringify(result, null, 4));
+            return result;
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
     }
 };
 

@@ -3,7 +3,7 @@
  create database kma_student_management;
  use kma_student_management;
 
- create table student_class(
+ create table student_classes(
 	id varchar(16) primary key,
     class_name nvarchar(40)
     
@@ -51,7 +51,7 @@
         role_name enum('admin','student')
 ); 
 
- create table student (
+ create table students (
 	id varchar(20) primary key,
     uid varchar(16) not null,
     class_id varchar(20),
@@ -60,7 +60,7 @@
     graduation_year int,
     
     foreign key (uid) references users(uid),
-    foreign key (class_id) references student_class(id),
+    foreign key (class_id) references student_classes(id),
 	foreign key (major_id) references majors(id)
  );
  
@@ -86,12 +86,12 @@
  
 
  
- create table student_subject_class(
-	id varchar(16) primary key,
+ create table student_subject_classes(
+	id int AUTO_INCREMENT primary key,
     student_id varchar(16),
     subject_class_id varchar(16),
     
-    foreign key (student_id) references student(id),
+    foreign key (student_id) references students(id),
     foreign key (subject_class_id) references subject_classes(id)
  );
  
@@ -102,7 +102,7 @@
     TP2 float,
     HK float,   
     
-    foreign key (student_id) references student(id),
+    foreign key (student_id) references students(id),
     foreign key (subject_id) references subjects(id)
  );
  
@@ -123,10 +123,10 @@ insert into majors (id, faculty_id, major_name) values ('major4','faculty3','An 
  -- insert admin
  
  -- insert student class
-insert into student_class (id, class_name) values ('CT4D','CT4D');
-insert into student_class (id, class_name) values ('CT5D','CT5D');
-insert into student_class (id, class_name) values ('AT16D','AT16D');
-insert into student_class (id, class_name) values ('DT4B','DT4B');
+insert into student_classes (id, class_name) values ('CT4D','CT4D');
+insert into student_classes (id, class_name) values ('CT5D','CT5D');
+insert into student_classes (id, class_name) values ('AT16D','AT16D');
+insert into student_classes (id, class_name) values ('DT4B','DT4B');
 
 -- insert giang vien
 insert into lecturers (id, faculty_id, lecturer_name) values ('GV010001','faculty2','Cao Thanh Vinh');
@@ -154,13 +154,24 @@ insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) v
 
 -- insert user
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
-values ('7760636423614133','$2b$10$CU2YdkTwfaum391rHZ0jJu70ACvIMm1g/O9c4DCi7HtQtgYvIM4tu','Hoang Van','Giang','admin@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','admin');
+values ('7760636423614133','$2b$10$CU2YdkTwfaum391rHZ0jJu70ACvIMm1g/O9c4DCi7HtQtgYvIM4tu','Hoàng Văn','Giang','admin@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','admin');
 
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
 values ('d871b2a935f14b17','$2b$10$2kBT.C.sGFR0bRd1xRYxM.gxpXlzoasMRGweWFJMwxzGCMwmgkj6q','Hoang Van','Giang','student@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','student');
 
+insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
+values ('e04946e681ab4897','$2b$10$2sJ5Sac53ljFwLruM8dLyO7rkZq6wrD3vUo/.l0WWNlgzcsW5Zb7G',' Trần Văn','An','student2@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','student');
 
-select * from student;
+insert into students (id, uid, class_id, major_id,year_of_addmission, graduation_year) values
+('CT050413','d871b2a935f14b17','CT5D','major2',2020,2025);
+
+insert into students (id, uid, class_id, major_id,year_of_addmission, graduation_year) values
+('CT050415','e04946e681ab4897','AT16D','major1',2020,2025);
+
+insert into student_subject_classes(student_id, subject_class_id) values ('CT050413','cnpm1');
+insert into student_subject_classes(student_id, subject_class_id) values ('CT050415','ltw1');
+
+select * from students;
  select * from users;
  select * from majors;
  select * from faculties;
@@ -169,7 +180,7 @@ select * from student;
  select * from score;
  select * from subject_classes;
  select * from schedules;
- select * from student_subject_class;
- select * from student_class;
+ select * from student_subject_classes;
+ select * from student_classes;
  
  

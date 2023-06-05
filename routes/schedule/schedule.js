@@ -343,4 +343,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
     }
 });
 
+//Lay danh sach cac lop ca hoc nay
+router.get('/:id/class', auth.isAuth, async function (req, res, next) { });
+
 module.exports = router;

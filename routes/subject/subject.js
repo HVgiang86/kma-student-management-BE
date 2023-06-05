@@ -347,4 +347,14 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
 });
+
+//lay danh sach cac lop cua mon
+router.get('/:id/class', auth.isAuth, async function (req, res) { });
+
+//lay danh sach cac sinh vien dk mon
+router.get('/:id/student', auth.isAuth, async function (req, res) { });
+
+//Lay bang diem
+router.get('/:id/score', auth.isAuth, async function (req, res) { });
+
 module.exports = router;

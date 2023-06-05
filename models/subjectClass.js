@@ -19,4 +19,4 @@ model.belongsTo(subject, { foreignKey: 'subject_id' })
 model.hasOne(lecturer, { foreignKey: 'id' })
 model.hasOne(schedule, { foreignKey: 'id' })
 
-module.exports = model;
+module.exports = model; 
