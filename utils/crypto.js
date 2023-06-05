@@ -1,10 +1,12 @@
-const argon2 = require('argon2');
+const bcrypt = require('bcryptjs');
+
 
 Crypto = {
     hash: async (password) => {
         try {
-            const hashedPassword = await argon2.hash(password);
-            return hashedPassword;
+            const saltRounds = 10;
+            const hashed_password = await bcrypt.hash(password, saltRounds);
+            return hashed_password;
         } catch (e) {
             console.log("An error occurred: " + e);
             throw new Error(e);
@@ -12,11 +14,16 @@ Crypto = {
     },
     comparePassword: async (password, hashed_password) => {
         try {
-            return await argon2.verify(hashed_password, password);
+            return await bcrypt.compare(password, hashed_password);
         } catch (e) {
             console.log("An error occurred: " + e);
             throw new Error(e);
         }
+    },
+
+    genSalt: async () => {
+        const saltRounds = 10;
+        return await bcrypt.genSalt(saltRounds);
     },
 
 }
