@@ -16,7 +16,9 @@ const auth = require('../../middleware/authMiddleware')
  *            schema:
  *              type: object
  *              properties:
- *                email:
+ *                uid:
+ *                  type: string
+ *                old_password:
  *                  type: string
  *                new_password:
  *                  type: string  
@@ -105,7 +107,7 @@ router.put('/', auth.isAuth, async function (req, res, next) {
     }
 
     try {
-        const result = await controller.changePassword(uid, old_password, new_password);
+        const result = await controller.changePasswordWithUid(uid, old_password, new_password);
         
         if (result === 404) {
             msg = { msg: "No Account Found" }
@@ -144,9 +146,7 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *            schema:
  *              type: object
  *              properties:
- *                uid:
- *                  type: string
- *                old_password:
+ *                email:
  *                  type: string
  *                new_password:
  *                  type: string  
