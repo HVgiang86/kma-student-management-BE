@@ -81,6 +81,8 @@ var facultyRouter = require('./routes/faculty/faculty');
 var scheduleRouter = require('./routes/schedule/schedule');
 var subjectRouter = require('./routes/subject/subject');
 var majorRouter = require('./routes/major/major');
+var studentRouter = require('./routes/student/student');
+var lecturerRouter = require('./routes/lecturer/lecturer');
 
 var app = express();
 
@@ -108,6 +110,8 @@ app.use('/faculty', facultyRouter);
 app.use('/schedule', scheduleRouter);
 app.use('/subject', subjectRouter);
 app.use('/major', majorRouter);
+app.use('/student', studentRouter);
+app.use('/lecturer', lecturerRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 

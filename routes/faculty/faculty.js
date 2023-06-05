@@ -331,9 +331,6 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *                id:
  *                  type: string
  *                  example: khoa01
- *                cascade:
- *                  type: boolean
- *                  example: false
  *     responses:
  *       200:
  *          description: Success
@@ -394,19 +391,81 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
         }
 
         const id = req.body.id
-        const cascade = req.body.cascade
 
-        const result = await controller.deleteById(id, cascade);
+        const result = await controller.deleteById(id);
 
         if (result === '400') {
             msg = { msg: "Bad Request. Has lectures or majors belonging to this faculty?" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
-        } else if (result) {
+        } else if (result === '200') {
             msg = { msg: "Deleted successfully" }
             res.status(200).send(JSON.stringify(msg, null, 4));
-        } else {
+        } else if (result === '404') {
             msg = { msg: "No Faculty Found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        } else {
+            msg = { msg: "Internal server error" }
+            res.status(500).send(JSON.stringify(msg, null, 4));
+        }
+
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+});
+
+/**
+ * @swagger
+ * /faculty/{id}/major:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Get all majors of faculty
+ *     description: Get all majors of faculty
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Major'
+ *        404:
+ *          description: Major not found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Major not found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+// Lấy danh sách ngành thuộc khoa
+router.get('/:id/major', auth.isAuth, async function (req, res, next) {
+    console.log("GET /faculty/:id/major");
+    try {
+        const faculty_id = req.params.id;
+
+        const result = await controller.getMajorListByFacultyId(faculty_id);
+
+        if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "No Major Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
         }
 
@@ -416,5 +475,125 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
         res.status(500).send(JSON.stringify(msg, null, 4));
     }
 });
+
+/**
+ * @swagger
+ * /faculty/{id}/lecturer:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Get all lecturers of faculty
+ *     description: Get all lecturers of faculty
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Lecturer'
+ *        404:
+ *          description: Lecturer not found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Lecturer not found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+// Lấy danh sách giảng viên thuộc khoa
+router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
+    console.log("GET /faculty/:id/lecturer");
+    try {
+        const faculty_id = req.params.id;
+
+        const result = await controller.getLecturerListByFacultyId(faculty_id);
+
+        if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "No Lecturer Found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+
+});
+
+/**
+ * @swagger
+ * /faculty/{id}/student:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     summary: Get all students of faculty
+ *     description: Get all students of faculty
+ *     responses:
+ *        200:
+ *          description: Success
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: array
+ *                items:
+ *                  $ref: '#/components/schemas/Student'
+ *        404:
+ *          description: Student not found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Student not found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
+// Lấy danh sách sinh viên thuộc khoa
+router.get('/:id/student', auth.isAuth, async function (req, res, next) {
+    console.log("GET /faculty/:id/student");
+    try {
+        const faculty_id = req.params.id;
+
+        const result = await controller.getStudentListByFacultyId(faculty_id);
+
+        if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "No Student Found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+});
+
 
 module.exports = router;

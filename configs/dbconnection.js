@@ -1,5 +1,7 @@
 require('dotenv').config();
-var host = process.env.DB_HOST 
+const mysql2 = require('mysql2');
+
+var host = process.env.DB_HOST
 var user = process.env.DB_USER
 var password = process.env.DB_PASS
 var database = process.env.DB_NAME
@@ -15,6 +17,7 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize(database, user, password, {
     host: host,
     dialect: 'mysql',
+    "dialectModule": mysql2,
 });
 
 module.exports = sequelize;

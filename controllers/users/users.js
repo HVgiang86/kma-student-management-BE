@@ -115,7 +115,7 @@ UserController = {
         }
     },
 
-    changePassword: async (uid, old_password, new_password) => {
+    changePasswordWithUid: async (uid, old_password, new_password) => {
         try {
             const userToUpdate = await User.findOne({ where: { uid: uid } });
             if (!userToUpdate) {
