@@ -9,6 +9,8 @@ const auth = require('../../middleware/authentication');
  * @swagger
  * /change_role:
  *   put:
+ *     tags:
+ *        - User
  *     summary: Change role of a user. Only admin can do this
  *     description: Change role of a user. Only admin can do this
  *     requestBody:

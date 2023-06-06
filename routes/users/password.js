@@ -7,6 +7,8 @@ var auth = require('../../middleware/authentication');
  * @swagger
  * /change_password:
  *   put:
+ *     tags:
+ *        - Password
  *     summary: Change password of a user
  *     description: Change password of a user. Only admin or account owner can do this
  *     requestBody:
@@ -137,6 +139,8 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  * @swagger
  * /change_password/reset:
  *   put:
+ *     tags:
+ *        - Password
  *     summary: Change role of a user. Only admin can do this
  *     description: Change role of a user. Only admin can do this
  *     requestBody:

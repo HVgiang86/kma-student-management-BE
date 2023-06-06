@@ -240,6 +240,8 @@ const auth = require('../../middleware/authentication');
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Student
  *     summary: Get all students
  *     description: Get all students
  *     responses:
@@ -296,6 +298,8 @@ router.get('/all', auth.isAuth, async function (req, res) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Student
  *     summary: Get student information
  *     description: Get student information
  *     responses:
@@ -367,6 +371,8 @@ router.get('/', auth.isAuth, async function (req, res) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Student
  *     summary: Get student information by student_code
  *     description: Get student information by student_code
  *     responses:
@@ -453,6 +459,8 @@ router.get('/:id/schedule', auth.isAuth, async function (req, res) { });
  *   put:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Student
  *     summary: Update a student account
  *     description: Update a student account
  *     requestBody:
@@ -583,6 +591,8 @@ router.put('/', auth.isAuth, async function (req, res) {
  * @swagger
  * /student:
  *   post:
+ *     tags:
+ *        - Student
  *     summary: Create a new student account
  *     description: Create a new student account
  *     requestBody:
@@ -712,6 +722,8 @@ router.post('/', async function (req, res) {
  *   delete:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Student
  *     summary: Delete a student by student_code
  *     description: Delete a student by student_code
  *     requestBody:

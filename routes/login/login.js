@@ -22,6 +22,8 @@ var auth = require('../../middleware/authentication');
  * @swagger
  * /login:
  *   post:
+ *     tags:
+ *        - Login/Logout
  *     summary: Login and get token, user id
  *     description: Login and get JWT token, user id
  *     requestBody:

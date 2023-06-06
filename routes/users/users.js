@@ -198,6 +198,8 @@ const authorizer = require('../../middleware/authorization');
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - User
  *     summary: Get all users 
  *     description: Get all users
  *     responses:
@@ -231,22 +233,22 @@ const authorizer = require('../../middleware/authorization');
  *                    example: Internal server error
  */
 router.get('/all', authen.isAuth, async function (req, res, next) {
-  console.log("GET /users/all");
-  try {
+	console.log("GET /users/all");
+	try {
 
-    const result = await controller.getUserList();
-    if (result && result.length > 0) {
-      const display = result.map(user => controller.copyUserWithoutPassword(user));
-      res.status(200).send(JSON.stringify(display, null, 4));
-    } else {
-      msg = { msg: "No Account Found" }
-      res.status(404).send(JSON.stringify(msg, null, 4));
-    }
-  } catch (err) {
-    console.log('An error occurred:', err);
-    msg = { msg: "Internal server error" }
-    res.status(500).send(JSON.stringify(msg, null, 4));
-  }
+		const result = await controller.getUserList();
+		if (result && result.length > 0) {
+			const display = result.map(user => controller.copyUserWithoutPassword(user));
+			res.status(200).send(JSON.stringify(display, null, 4));
+		} else {
+			msg = { msg: "No Account Found" }
+			res.status(404).send(JSON.stringify(msg, null, 4));
+		}
+	} catch (err) {
+		console.log('An error occurred:', err);
+		msg = { msg: "Internal server error" }
+		res.status(500).send(JSON.stringify(msg, null, 4));
+	}
 
 });
 
@@ -257,6 +259,8 @@ router.get('/all', authen.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - User
  *     summary: Get user info
  *     description: Get user info
  *     responses:
@@ -288,23 +292,23 @@ router.get('/all', authen.isAuth, async function (req, res, next) {
  *                    example: Internal server error
  */
 router.get('/', authen.isAuth, async function (req, res, next) {
-  console.log("GET /users");
-  try {
-    const requestedUserId = req.user.uid;
+	console.log("GET /users");
+	try {
+		const requestedUserId = req.user.uid;
 
-    const result = await controller.getUserInfo(requestedUserId);
-    if (result) {
-      const display = controller.copyUserWithoutPassword(result);
-      res.status(200).send(JSON.stringify(display, null, 4));
-    } else {
-      msg = { msg: "No Account Found" }
-      res.status(404).send(JSON.stringify(msg, null, 4));
-    }
-  } catch (err) {
-    console.log('An error occurred:', err);
-    msg = { msg: "Internal server error" }
-    res.status(500).send(JSON.stringify(msg, null, 4));
-  }
+		const result = await controller.getUserInfo(requestedUserId);
+		if (result) {
+			const display = controller.copyUserWithoutPassword(result);
+			res.status(200).send(JSON.stringify(display, null, 4));
+		} else {
+			msg = { msg: "No Account Found" }
+			res.status(404).send(JSON.stringify(msg, null, 4));
+		}
+	} catch (err) {
+		console.log('An error occurred:', err);
+		msg = { msg: "Internal server error" }
+		res.status(500).send(JSON.stringify(msg, null, 4));
+	}
 
 });
 
@@ -314,6 +318,8 @@ router.get('/', authen.isAuth, async function (req, res, next) {
  *   delete:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - User
  *     summary: Delete a user by uid
  *     description: Delete a user by uid
  *     requestBody:
@@ -359,30 +365,30 @@ router.get('/', authen.isAuth, async function (req, res, next) {
  *                    example: Internal server error
  */
 router.delete('/', authen.isAuth, async function (req, res, next) {
-  console.log("DELETE /users");
-  try {
+	console.log("DELETE /users");
+	try {
 
-    if (req.user.role_name !== 'admin') {
-      msg = { msg: "Unauthorized. Forbidden" }
-      res.status(403).send(JSON.stringify(msg, null, 4));
-      return;
-    }
+		if (req.user.role_name !== 'admin') {
+			msg = { msg: "Unauthorized. Forbidden" }
+			res.status(403).send(JSON.stringify(msg, null, 4));
+			return;
+		}
 
-    const uid = req.body.uid;
-    const result = await controller.deleteByUid(uid);
+		const uid = req.body.uid;
+		const result = await controller.deleteByUid(uid);
 
-    if (result) {
-      msg = { msg: `Deleted user with uid: ${uid}` }
-      res.status(200).send(JSON.stringify(msg, null, 4));
-    } else {
-      msg = { msg: "No Account Found" }
-      res.status(404).send(JSON.stringify(msg, null, 4));
-    }
-  } catch (err) {
-    console.log('An error occurred:', err);
-    msg = { msg: "Internal server error" }
-    res.status(500).send(JSON.stringify(msg, null, 4));
-  }
+		if (result) {
+			msg = { msg: `Deleted user with uid: ${uid}` }
+			res.status(200).send(JSON.stringify(msg, null, 4));
+		} else {
+			msg = { msg: "No Account Found" }
+			res.status(404).send(JSON.stringify(msg, null, 4));
+		}
+	} catch (err) {
+		console.log('An error occurred:', err);
+		msg = { msg: "Internal server error" }
+		res.status(500).send(JSON.stringify(msg, null, 4));
+	}
 });
 /**
  * @swagger
@@ -390,6 +396,8 @@ router.delete('/', authen.isAuth, async function (req, res, next) {
  *   put:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - User
  *     summary: Update a user
  *     description: Update a user
  *     requestBody:
@@ -437,73 +445,73 @@ router.delete('/', authen.isAuth, async function (req, res, next) {
  *                    example: Internal server error
  */
 router.put('/', authen.isAuth, async function (req, res, next) {
-  console.log("PUT /users");
-  try {
-    const requestedUserId = req.user.uid;
+	console.log("PUT /users");
+	try {
+		const requestedUserId = req.user.uid;
 
-    if (!(req.user.role_name === 'admin' || requestedUserId === req.body.uid)) {
-      msg = { msg: "Unauthorized. Forbidden" }
-      res.status(403).send(JSON.stringify(msg, null, 4));
-      return;
-    }
+		if (!(req.user.role_name === 'admin' || requestedUserId === req.body.uid)) {
+			msg = { msg: "Unauthorized. Forbidden" }
+			res.status(403).send(JSON.stringify(msg, null, 4));
+			return;
+		}
 
-    const uid = req.body.uid;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const phone_number = req.body.phone_number;
-    const address = req.body.address;
-    const date_of_birth = req.body.date_of_birth;
-    const citizen_id = req.body.citizen_id;
-    const religion = req.body.religion;
-    const nationality = req.body.nationality;
-    const gender = req.body.gender;
-    const nation = req.body.nation;
+		const uid = req.body.uid;
+		const first_name = req.body.first_name;
+		const last_name = req.body.last_name;
+		const phone_number = req.body.phone_number;
+		const address = req.body.address;
+		const date_of_birth = req.body.date_of_birth;
+		const citizen_id = req.body.citizen_id;
+		const religion = req.body.religion;
+		const nationality = req.body.nationality;
+		const gender = req.body.gender;
+		const nation = req.body.nation;
 
-    const user = {
-      uid: uid,
-      first_name: first_name,
-      last_name: last_name,
-      phone_number: phone_number,
-      address: address,
-      date_of_birth: date_of_birth,
-      citizen_id: citizen_id,
-      religion: religion,
-      nationality: nationality,
-      gender: gender,
-      nation: nation
-    }
+		const user = {
+			uid: uid,
+			first_name: first_name,
+			last_name: last_name,
+			phone_number: phone_number,
+			address: address,
+			date_of_birth: date_of_birth,
+			citizen_id: citizen_id,
+			religion: religion,
+			nationality: nationality,
+			gender: gender,
+			nation: nation
+		}
 
-    //justify
-    for (let key in user) {
-      if (user[key] === undefined) {
-        user[key] = "";
-      }
-    }
-
-
-    if (user.uid.length == 0 || user.first_name.length == 0 || user.last_name.length == 0) {
-      res.status(400).send(JSON.stringify("Invalid input", null, 4));
-      return;
-    }
+		//justify
+		for (let key in user) {
+			if (user[key] === undefined) {
+				user[key] = "";
+			}
+		}
 
 
-    const result = await controller.updateUser(user);
+		if (user.uid.length == 0 || user.first_name.length == 0 || user.last_name.length == 0) {
+			res.status(400).send(JSON.stringify("Invalid input", null, 4));
+			return;
+		}
 
-    if (result) {
-      console.log("Updated user: " + JSON.stringify(result, null, 4));
-      const display = controller.copyUserWithoutPassword(result);
-      res.status(200).send(JSON.stringify(display, null, 4));
 
-    } else {
-      msg = { msg: "No Account Found" }
-      res.status(404).send(JSON.stringify(msg, null, 4));
-    }
+		const result = await controller.updateUser(user);
 
-  } catch (err) {
-    console.log('An error occurred:', err);
-    msg = { msg: "Internal server error" }
-    res.status(500).send(JSON.stringify(msg, null, 4));
-  }
+		if (result) {
+			console.log("Updated user: " + JSON.stringify(result, null, 4));
+			const display = controller.copyUserWithoutPassword(result);
+			res.status(200).send(JSON.stringify(display, null, 4));
+
+		} else {
+			msg = { msg: "No Account Found" }
+			res.status(404).send(JSON.stringify(msg, null, 4));
+		}
+
+	} catch (err) {
+		console.log('An error occurred:', err);
+		msg = { msg: "Internal server error" }
+		res.status(500).send(JSON.stringify(msg, null, 4));
+	}
 
 });
 
@@ -511,6 +519,8 @@ router.put('/', authen.isAuth, async function (req, res, next) {
  * @swagger
  * /users:
  *   post:
+ *     tags:
+ *        - User
  *     summary: Create a new user 
  *     description: Create a new user
  *     requestBody:
@@ -559,70 +569,93 @@ router.put('/', authen.isAuth, async function (req, res, next) {
  */
 
 router.post('/', async function (req, res, next) {
-  console.log("POST /users");
-  try {
-    const email = req.body.email
-    const password = req.body.password
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const phone_number = req.body.phone_number;
-    const address = req.body.address;
-    const date_of_birth = req.body.date_of_birth;
-    const citizen_id = req.body.citizen_id;
-    const religion = req.body.religion;
-    const nationality = req.body.nationality;
-    const gender = req.body.gender;
-    const role = req.body.role;
-    const nation = req.body.nation;
+	console.log("POST /users");
+	try {
+		const email = req.body.email
+		const password = req.body.password
+		const first_name = req.body.first_name;
+		const last_name = req.body.last_name;
+		const phone_number = req.body.phone_number;
+		const address = req.body.address;
+		const date_of_birth = req.body.date_of_birth;
+		const citizen_id = req.body.citizen_id;
+		const religion = req.body.religion;
+		const nationality = req.body.nationality;
+		const gender = req.body.gender;
+		const role = req.body.role;
+		const nation = req.body.nation;
 
-    const user = {
-      email: email,
-      password: password,
-      first_name: first_name,
-      last_name: last_name,
-      phone_number: phone_number,
-      address: address,
-      date_of_birth: date_of_birth,
-      citizen_id: citizen_id,
-      religion: religion,
-      nationality: nationality,
-      gender: gender,
-      role: role,
-      nation: nation
-    }
+		const user = {
+			email: email,
+			password: password,
+			first_name: first_name,
+			last_name: last_name,
+			phone_number: phone_number,
+			address: address,
+			date_of_birth: date_of_birth,
+			citizen_id: citizen_id,
+			religion: religion,
+			nationality: nationality,
+			gender: gender,
+			role: role,
+			nation: nation
+		}
 
-    //justify
-    for (let key in user) {
-      if (user[key] === undefined) {
-        user[key] = "";
-      }
-    }
+		//justify
+		for (let key in user) {
+			if (user[key] === undefined) {
+				user[key] = "";
+			}
+		}
 
-    if (user.email.length == 0 || user.password.length == 0 || user.first_name.length == 0 || user.last_name.length == 0 || user.role.length == 0 || user.gender.length == 0) {
-      msg = { msg: "Internal server error" }
-      res.status(400).send(JSON.stringify(msg, null, 4));
-    }
+		if (user.email.length == 0 || user.password.length == 0 || user.first_name.length == 0 || user.last_name.length == 0 || user.role.length == 0 || user.gender.length == 0) {
+			msg = { msg: "Internal server error" }
+			res.status(400).send(JSON.stringify(msg, null, 4));
+		}
 
-    const result = await controller.create(user);
-    console.log("result: " + result);
+		const result = await controller.create(user);
+		console.log("result: " + result);
 
-    if (result) {
-      console.log("Created user: " + JSON.stringify(result, null, 4));
-      const display = controller.copyUserWithoutPassword(result);
-      res.status(200).send(JSON.stringify(display, null, 4));
+		if (result) {
+			console.log("Created user: " + JSON.stringify(result, null, 4));
+			const display = controller.copyUserWithoutPassword(result);
+			res.status(200).send(JSON.stringify(display, null, 4));
 
-    } else {
-      console.log("router: Email already exists")
-      msg = { msg: "Email already exists" }
+		} else {
+			console.log("router: Email already exists")
+			msg = { msg: "Email already exists" }
 
-      res.status(409).send(JSON.stringify(msg, null, 4));
-    }
-  } catch (err) {
-    console.log('An error occurred:', err);
-    msg = { msg: "Internal server error" }
-    res.status(500).send(JSON.stringify(msg, null, 4));
-  }
+			res.status(409).send(JSON.stringify(msg, null, 4));
+		}
+	} catch (err) {
+		console.log('An error occurred:', err);
+		msg = { msg: "Internal server error" }
+		res.status(500).send(JSON.stringify(msg, null, 4));
+	}
 
 });
 
 module.exports = router;
+
+/**
+ * @swagger
+ * tags:
+ * 	- name: User
+ *  description: API operations related to User management
+ *  - name: Login/Logout
+ *  description: API operations related to Login/Logout
+ *  - name: Student
+ *  description: API operations related to Student management
+ *  - name: Password
+ *  description: API operations related to Password management
+ *  - name: Faculty
+ *  description: API operations related to Faculty management
+ *  - name: Schedule
+ *  description: API operations related to Schedule management
+ *  - name: Subject
+ *  description: API operations related to Subject management
+ *  - name: Major
+ *  description: API operations related to Major management
+ *  - name: Lecturer
+ *  description: API operations related to Lecturer management
+ */
