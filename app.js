@@ -55,7 +55,10 @@ const options = {
         './routes/faculty/faculty.js',
         './routes/schedule/schedule.js',
         './routes/subject/subject.js',
-        './routes/major/major.js']
+        './routes/major/major.js',
+        './routes/student/student.js',
+        './routes/lecturer/lecturer.js',
+        './routes/class/subjectClass.js']
 }
 const specs = swaggerJsDoc(options);
 

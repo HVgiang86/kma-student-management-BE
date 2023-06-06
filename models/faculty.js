@@ -3,7 +3,8 @@ const { DataTypes } = require('sequelize');
 
 const model = sequelize.define('faculty', {
     id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     },
     faculty_name: {

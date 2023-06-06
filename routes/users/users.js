@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/users/users');
-const auth = require('../../middleware/authMiddleware')
+const authen = require('../../middleware/authentication');
+const authorizer = require('../../middleware/authorization');
 
 /**
  * @swagger
@@ -229,7 +230,7 @@ const auth = require('../../middleware/authMiddleware')
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/all', auth.isAdmin, async function (req, res, next) {
+router.get('/all', authen.isAuth, async function (req, res, next) {
   console.log("GET /users/all");
   try {
 
@@ -264,9 +265,7 @@ router.get('/all', auth.isAdmin, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
- *                items:
- *                  $ref: '#/components/schemas/DisplayUsers'
+ *                $ref: '#/components/schemas/DisplayUsers'
  *        404:
  *          description: No Account Found
  *          content:
@@ -288,7 +287,7 @@ router.get('/all', auth.isAdmin, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.get('/', auth.isAuth, async function (req, res, next) {
+router.get('/', authen.isAuth, async function (req, res, next) {
   console.log("GET /users");
   try {
     const requestedUserId = req.user.uid;
@@ -359,7 +358,7 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.delete('/', auth.isAuth, async function (req, res, next) {
+router.delete('/', authen.isAuth, async function (req, res, next) {
   console.log("DELETE /users");
   try {
 
@@ -405,11 +404,17 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
+ *                $ref: '#/components/schemas/DisplayUsers'
+ *        400:
+ *          description: Invalid input
+ *          content:
+ *            application/json:
+ *              schema:
  *                type: object
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Deleted user with uid 
+ *                    example: Invalid input
  *        404:
  *          description: No Account Found
  *          content:
@@ -431,7 +436,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *                    type: string
  *                    example: Internal server error
  */
-router.put('/', auth.isAuth, async function (req, res, next) {
+router.put('/', authen.isAuth, async function (req, res, next) {
   console.log("PUT /users");
   try {
     const requestedUserId = req.user.uid;
@@ -455,8 +460,17 @@ router.put('/', auth.isAuth, async function (req, res, next) {
     const nation = req.body.nation;
 
     const user = {
-      uid: uid, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth, citizen_id: citizen_id,
-      religion: religion, nationality: nationality, gender: gender, nation: nation
+      uid: uid,
+      first_name: first_name,
+      last_name: last_name,
+      phone_number: phone_number,
+      address: address,
+      date_of_birth: date_of_birth,
+      citizen_id: citizen_id,
+      religion: religion,
+      nationality: nationality,
+      gender: gender,
+      nation: nation
     }
 
     //justify
@@ -467,8 +481,11 @@ router.put('/', auth.isAuth, async function (req, res, next) {
     }
 
 
-    if (user.uid.length == 0 || user.first_name.length == 0 || user.last_name.length == 0)
+    if (user.uid.length == 0 || user.first_name.length == 0 || user.last_name.length == 0) {
       res.status(400).send(JSON.stringify("Invalid input", null, 4));
+      return;
+    }
+
 
     const result = await controller.updateUser(user);
 
@@ -544,11 +561,6 @@ router.put('/', auth.isAuth, async function (req, res, next) {
 router.post('/', async function (req, res, next) {
   console.log("POST /users");
   try {
-    if (!req.body.email || !req.body.password || !req.body.first_name || !req.body.last_name || !req.body.role || !req.body.gender) {
-      msg = { msg: "Internal server error" }
-      res.status(400).send(JSON.stringify(msg, null, 4));
-    }
-
     const email = req.body.email
     const password = req.body.password
     const first_name = req.body.first_name;
@@ -564,8 +576,19 @@ router.post('/', async function (req, res, next) {
     const nation = req.body.nation;
 
     const user = {
-      email: email, password: password, first_name: first_name, last_name: last_name, phone_number: phone_number, address: address, date_of_birth: date_of_birth, citizen_id: citizen_id,
-      religion: religion, nationality: nationality, gender: gender, role: role, nation: nation
+      email: email,
+      password: password,
+      first_name: first_name,
+      last_name: last_name,
+      phone_number: phone_number,
+      address: address,
+      date_of_birth: date_of_birth,
+      citizen_id: citizen_id,
+      religion: religion,
+      nationality: nationality,
+      gender: gender,
+      role: role,
+      nation: nation
     }
 
     //justify

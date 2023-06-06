@@ -5,6 +5,10 @@ const subject = require('./subject');
 const student = require('./student');
 
 const model = sequelize.define('major', {
+    id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+    },
     TP1: {
         type: DataTypes.FLOAT,
 

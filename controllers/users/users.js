@@ -103,7 +103,7 @@ UserController = {
 
             user['email'] = userToUpdate['email']
             user['password'] = userToUpdate['password']
-            user['role'] = userToUpdate['role']
+            user['role_name'] = userToUpdate['role']
 
             const result = await userToUpdate.update(user);
             console.log("Updated user: " + JSON.stringify(result, null, 4));
