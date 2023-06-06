@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/users/users');
-const auth = require('../../middleware/authMiddleware')
+var auth = require('../../middleware/authentication');
 
 /**
  * @swagger
@@ -108,7 +108,7 @@ router.put('/', auth.isAuth, async function (req, res, next) {
 
     try {
         const result = await controller.changePasswordWithUid(uid, old_password, new_password);
-        
+
         if (result === 404) {
             msg = { msg: "No Account Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));

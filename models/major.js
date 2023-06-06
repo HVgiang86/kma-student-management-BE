@@ -4,7 +4,8 @@ const { DataTypes } = require('sequelize');
 
 const model = sequelize.define('major', {
     id: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
         primaryKey: true,
     },
     major_name: {

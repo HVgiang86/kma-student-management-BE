@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/subject/subject');
-const auth = require('../../middleware/authMiddleware')
+const auth = require('../../middleware/authentication');
 
 /**
  * @swagger
@@ -101,7 +101,6 @@ router.get('/', auth.isAuth, auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Subject'
  *        400:
@@ -189,7 +188,6 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Subject'
  *        404:
@@ -283,10 +281,10 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *            application/json:
  *              schema:
  *                type: object
- *              properties:
- *                msg:
- *                  type: string
- *                  example: Subject deleted
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Subject deleted
  *        400:
  *          description: Invalid input
  *          content:

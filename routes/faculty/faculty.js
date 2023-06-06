@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var controller = require('../../controllers/faculty/faculty');
-const auth = require('../../middleware/authMiddleware');
+const auth = require('../../middleware/authentication');
 
 
 /**
@@ -12,9 +12,9 @@ const auth = require('../../middleware/authMiddleware');
  *       type: object
  *       properties:
  *          id:
- *            type: string
- *            description: uid
- *            example: khoa01
+ *            type: integer
+ *            description: faculty_id
+ *            example: 1
  *          faculty_name:
  *            type: string
  *            description: first_name
@@ -163,7 +163,6 @@ router.get('/:id', auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Faculty'
  *       403:
@@ -242,16 +241,17 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *       content: 
  *          application/json:
  *              schema:
- *                $ref: '#/components/schemas/Faculty'
- *                  
- * 
+ *                type: object
+ *                properties:
+ *                  faculty_name:
+ *                      type: string
+ *                      example: Công nghệ thông tin 
  *     responses:
  *       200:
  *          description: Success
  *          content:
  *            application/json:
  *              schema:
- *                type: array
  *                items:
  *                  $ref: '#/components/schemas/Faculty'
  *       400:
@@ -294,9 +294,8 @@ router.post('/', auth.isAuth, async function (req, res, next) {
             return;
         }
 
-        const id = req.body.id
         const faculty_name = req.body.faculty_name
-        const faculty = { id: id, faculty_name: faculty_name }
+        const faculty = { faculty_name: faculty_name }
 
         const result = await controller.create(faculty);
         if (result) {
@@ -552,7 +551,7 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/Student'
+ *                  $ref: '#/components/schemas/DisplayStudent'
  *        404:
  *          description: Student not found
  *          content:

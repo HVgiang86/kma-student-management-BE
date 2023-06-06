@@ -5,6 +5,10 @@ const student_class = require('./studentClass');
 const major = require('./major');
 
 const model = sequelize.define('student', {
+    uid: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     id: {
         type: DataTypes.STRING,
         primaryKey: true,
@@ -19,8 +23,7 @@ const model = sequelize.define('student', {
     }
 }, { timestamps: false });
 
-model.hasOne(user, { foreignKey: 'uid' })
+model.hasOne(user, { foreignKey: 'uid', sourceKey: 'uid' })
 model.belongsTo(student_class, { foreignKey: 'class_id' });
-model.belongsTo(major, { foreignKey: 'major_id' });
-
+model.belongsTo(major, { foreignKey: 'major_id', sourceKey: 'id' });
 module.exports = model;

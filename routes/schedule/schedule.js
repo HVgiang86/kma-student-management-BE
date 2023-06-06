@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/schedule/schedule');
-const auth = require('../../middleware/authMiddleware')
+const auth = require('../../middleware/authentication')
 
 /**
  * @swagger
@@ -12,7 +12,7 @@ const auth = require('../../middleware/authMiddleware')
  *       properties:
  *          id:
  *            type: string
- *            description: uid
+ *            description: id
  *            example: ca1
  *          start_time:
  *            type: string
@@ -100,7 +100,6 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Schedule'
  *        400:
@@ -189,7 +188,6 @@ router.put('/', async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Schedule'
  *        404:
@@ -283,10 +281,10 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *            application/json:
  *              schema:
  *                type: object
- *              properties:
- *                msg:
- *                  type: string
- *                  example: Schedule deleted
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Schedule deleted
  *        400:
  *          description: Invalid input
  *          content:

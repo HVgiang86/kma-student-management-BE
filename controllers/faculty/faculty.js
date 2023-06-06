@@ -26,10 +26,9 @@ FacultyController = {
     },
     create: async (faculty) => {
         try {
-            var id = faculty.id;
             var faculty_name = faculty.faculty_name;
 
-            const result = await Faculty.findOne({ where: { id: id } })
+            const result = await Faculty.findOne({ where: { faculty_name: faculty_name } })
 
             if (result) {
                 console.log("Faculty ID already exists - Controller")
@@ -37,7 +36,7 @@ FacultyController = {
             }
 
             var newFaculty = null;
-            await Faculty.create({ id: id, faculty_name: faculty_name }).then(faculty => {
+            await Faculty.create({ faculty_name: faculty_name }).then(faculty => {
                 newFaculty = faculty;
                 console.log("Controller: Create faculty: " + JSON.stringify(newFaculty, null, 4));
             }).catch(err => {

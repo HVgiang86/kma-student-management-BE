@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/major/major');
-const auth = require('../../middleware/authMiddleware')
+const auth = require('../../middleware/authentication');
 
 /**
  * @swagger
@@ -11,15 +11,15 @@ const auth = require('../../middleware/authMiddleware')
  *       type: object
  *       properties:
  *          id:
- *            type: string
+ *            type: integer
  *            description: id
- *            example: cntt
+ *            example: 1
  *          major_name:
  *            type: string
  *            description: major name
  *            example: Công nghệ thông tin
  *          faculty_id:
- *            type: string
+ *            type: integer
  *            description: faculty id
  *            example: cntt
  */
@@ -95,14 +95,20 @@ router.get('/', async (req, res) => {
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Major'
+ *              type: object
+ *              properties:
+ *                  major_name:
+ *                      type: string
+ *                      example: Công nghệ phần mềm nhúng
+ *                  faculty_id: 
+ *                      type: integer        
+ *                      example: 1          
  *     responses:
  *        200:
  *          description: Success
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Major'
  *        404:
@@ -138,18 +144,16 @@ router.get('/', async (req, res) => {
  */
 router.post('/', async (req, res) => {
     try {
-        const id = req.body.id;
         const major_name = req.body.major_name;
         const faculty_id = req.body.faculty_id;
 
-        if (!id || !major_name || !faculty_id) {
+        if (!major_name || !faculty_id) {
             msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
 
         major = {
-            id: id,
             major_name: major_name,
             faculty_id: faculty_id
         }
@@ -190,7 +194,6 @@ router.post('/', async (req, res) => {
  *          content:
  *            application/json:
  *              schema:
- *                type: object
  *                items:
  *                  $ref: '#/components/schemas/Major'
  *        400:
@@ -284,10 +287,10 @@ router.put('/', async (req, res) => {
  *            application/json:
  *              schema:
  *                type: object
- *              properties:
- *                msg:
- *                  type: string
- *                  example: Major deleted
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Major deleted
  *        400:
  *          description: Invalid input
  *          content:
@@ -355,7 +358,7 @@ router.delete('/', async (req, res) => {
  *              schema:
  *                type: array
  *                items:
- *                  $ref: '#/components/schemas/Student'
+ *                  $ref: '#/components/schemas/DisplayStudent'
  *        404:
  *          description: Student or Major not found
  *          content:

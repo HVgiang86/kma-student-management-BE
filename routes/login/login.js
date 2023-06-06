@@ -1,7 +1,22 @@
 var express = require('express');
 var router = express.Router();
 const controller = require('../../controllers/login');
-var auth = require('../../middleware/authMiddleware')
+var auth = require('../../middleware/authentication');
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     LoginAccount:
+ *       type: object
+ *       properties:
+ *          email:
+ *              type: string
+ *              example: useremail@gmail.com
+ *          password:
+ *              type: string
+ *              example: password
+ */
 
 /**
  * @swagger
@@ -14,14 +29,7 @@ var auth = require('../../middleware/authMiddleware')
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              properties:
- *                email:
- *                  type: string
- *                  example: useremail@gmail.com
- *                password:
- *                  type: string
- *                  example: password
+ *              $ref: '#/components/schemas/LoginAccount'
  *     responses:
  *        200:
  *          description: Success

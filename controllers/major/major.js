@@ -3,20 +3,19 @@ const Major = require('../../models/major');
 MajorController = {
     create: async (major) => {
         try {
-            const id = major.id
             const faculty_id = major.faculty_id
             const major_name = major.major_name
 
-            if (!id || !faculty_id || !major_name)
+            if (!faculty_id || !major_name)
                 return null;
 
-            var result = await Major.findOne({ where: { id: id } });
+            var result = await Major.findOne({ where: { major_name: major_name } });
 
             if (result)
                 return null;
 
             var newMajor = null;
-            await Major.create({ id: id, major_name: major_name, faculty_id: faculty_id }).then(major => {
+            await Major.create({ major_name: major_name, faculty_id: faculty_id }).then(major => {
                 console.log("Controller: Create major: " + JSON.stringify(major, null, 4));
                 newMajor = major;
             }).catch(err => {
