@@ -28,6 +28,8 @@ const auth = require('../../middleware/authentication');
  *   get:
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Get all faculities 
  *     description: Get all faculities
  *     responses:
@@ -86,6 +88,8 @@ router.get('/', auth.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Get faculty info by id  
  *     description: Get faculty info by id. Cay vcđ. API này đang không biết documenting kiểu gì :)) Hiểu đơn giản là nó là tham số trong URL
  *     responses:
@@ -147,6 +151,8 @@ router.get('/:id', auth.isAuth, async function (req, res, next) {
  *   put:
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Update a fuculity
  *     description: Update a fuculity
  *     requestBody:
@@ -234,6 +240,8 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *   post:
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Create a fuculity
  *     description: Create a fuculity
  *     requestBody:
@@ -318,6 +326,8 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *   delete:
  *     security:
  *       - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Delete a fuculity by id
  *     description: Delete a fuculity by id
  *     requestBody:
@@ -421,6 +431,8 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Get all majors of faculty
  *     description: Get all majors of faculty
  *     responses:
@@ -481,6 +493,8 @@ router.get('/:id/major', auth.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Get all lecturers of faculty
  *     description: Get all lecturers of faculty
  *     responses:
@@ -541,6 +555,8 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Faculty
  *     summary: Get all students of faculty
  *     description: Get all students of faculty
  *     responses:

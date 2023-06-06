@@ -30,6 +30,8 @@ const auth = require('../../middleware/authentication');
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Subject
  *     summary: Get all subjects 
  *     description: Get all subjects
  *     responses:
@@ -87,6 +89,8 @@ router.get('/', auth.isAuth, auth.isAuth, async function (req, res, next) {
  *   put:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Subject
  *     summary: Upadate a schedule 
  *     description: Upadate a schedule 
  *     requestBody:
@@ -174,6 +178,8 @@ router.put('/', auth.isAuth, async function (req, res, next) {
  *   post:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Subject
  *     summary: Create a subject 
  *     description: Create a subject 
  *     requestBody:
@@ -262,6 +268,8 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *   delete:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Subject
  *     summary: Delete a subject by id
  *     description: Delete a subject by id
  *     requestBody:

@@ -31,6 +31,8 @@ const auth = require('../../middleware/authentication');
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Major
  *     summary: Get all majors 
  *     description: Get all majors
  *     responses:
@@ -88,6 +90,8 @@ router.get('/', async (req, res) => {
  *   post:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Major
  *     summary: Create a major 
  *     description: Create a major 
  *     requestBody:
@@ -180,6 +184,8 @@ router.post('/', async (req, res) => {
  *   put:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Major
  *     summary: Upadate a Major 
  *     description: Upadate a Major 
  *     requestBody:
@@ -268,6 +274,8 @@ router.put('/', async (req, res) => {
  *   delete:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Major
  *     summary: Delete a major by id
  *     description: Delete a major by id
  *     requestBody:
@@ -348,6 +356,8 @@ router.delete('/', async (req, res) => {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Major
  *     summary: Get all students of major 
  *     description: Get all students of major 
  *     responses:

@@ -30,6 +30,8 @@ const auth = require('../../middleware/authentication');
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Get all lecturers
  *     description: Get all lecturers
  *     responses:
@@ -85,6 +87,8 @@ router.get('/', auth.isAuth, async function (req, res) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Get lecturer by id
  *     description: Get lecturer by id
  *     responses:
@@ -156,6 +160,8 @@ router.get('/:id', auth.isAuth, async function (req, res) {
  *   put:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Update a lecturer
  *     description: Update a lecturer
  *     requestBody:
@@ -241,6 +247,8 @@ router.put('/', auth.isAuth, async function (req, res) {
  *   post:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Create a lecturer
  *     description: Create a lecturer
  *     requestBody:
@@ -334,6 +342,8 @@ router.post('/', auth.isAuth, async function (req, res) {
  *   delete:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Delete a lecturer
  *     description: Delete a lecturer
  *     requestBody:
@@ -438,6 +448,8 @@ router.delete('/', auth.isAuth, async function (req, res) {
  *   get:
  *     security:
  *        - bearerAuth: []
+ *     tags:
+ *        - Lecturer
  *     summary: Get all subject class of a lecturer
  *     description: Get all subject class of a lecturer
  *     responses:
