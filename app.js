@@ -97,19 +97,7 @@ app.set('view engine', 'jade');
 app.set('port', port);
 
 
-var whitelist = ['http://localhost.qlsv.com', 'http://127.0.0.1']
-var corsOptions = {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    }
-  }
-
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
