@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var db = require('./configs/dbconnection');
 const bodyParser = require('body-parser');
-
+var cors = require('cors')
 
 db.authenticate().then(() => {
     console.log('Connection has been established successfully.');
@@ -96,6 +96,20 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('port', port);
 
+
+var whitelist = ['http://localhost.qlsv.com', 'http://127.0.0.1']
+var corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    }
+  }
+
+
+app.use(cors(corsOptions));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -133,6 +147,8 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)
