@@ -170,8 +170,7 @@ router.get('/:id', auth.isAuth, async function (req, res) {
  *        content:
  *          application/json:
  *            schema:
- *               items:
- *                 $ref: '#/components/schemas/Lecturer'
+*                 $ref: '#/components/schemas/Lecturer'
  *     responses:
  *        200:
  *          description: Success
@@ -214,26 +213,36 @@ router.get('/:id', auth.isAuth, async function (req, res) {
 router.put('/', auth.isAuth, async function (req, res) {
     console.log("PUT /lecturer");
     try {
+        var id = req.body.id;
+        var faculty_id = req.body.faculty_id;
+        var lecturer_name = req.body.lecturer_name;
+        console.log(req.body);
+        console.log(id);
+        console.log(faculty_id);
+        console.log(lecturer_name);
         if (!req.body.id || !req.body.faculty_id || !req.body.lecturer_name) {
             msg = { msg: "Bad request. Body parameters missing" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
 
-        var id = req.body.id;
-        var faculty_id = req.body.faculty_id;
-        var lecturer_name = req.body.lecturer_name;
-
         lecturer = { id: id, faculty_id: faculty_id, lecturer_name: lecturer_name };
 
         const result = await controller.update(lecturer);
 
-        if (result) {
-            res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
+        if (result === '404') {
             msg = { msg: "Lecturer ID not exists" }
             res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result === '409') {
+            msg = { msg: "Faculty ID not exists" }
+            res.status(409).send(JSON.stringify(msg, null, 4));
+        } else if (result) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            msg = { msg: "Update lecturer failed" }
+            res.status(500).send(JSON.stringify(msg, null, 4));
         }
+        
     } catch (err) {
         console.log('An error occurred:', err);
         msg = { msg: "Internal server error" }
@@ -259,6 +268,10 @@ router.put('/', auth.isAuth, async function (req, res) {
  *            schema:
  *               type: object
  *               properties:
+ *                  id:
+ *                     type: string
+ *                     description: id
+ *                     example: GV0001
  *                  faculty_id:
  *                     type: integer
  *                     description: faculty_id
@@ -287,7 +300,7 @@ router.put('/', auth.isAuth, async function (req, res) {
  *                    type: string
  *                    example: Bad request. Body parameters missing
  *        409:
- *          description: Lecturer Name already exists
+ *          description: Lecturer ID already exists
  *          content:
  *            application/json:
  *              schema:
@@ -295,7 +308,7 @@ router.put('/', auth.isAuth, async function (req, res) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Lecturer Name already exists
+ *                    example: Lecturer ID already exists
  *        500:
  *          description: Internal server error
  *          content:
@@ -316,18 +329,22 @@ router.post('/', auth.isAuth, async function (req, res) {
             return;
         }
 
+        var id = req.body.id;
         var faculty_id = req.body.faculty_id;
         var lecturer_name = req.body.lecturer_name;
 
-        lecturer = { faculty_id: faculty_id, lecturer_name: lecturer_name };
+        lecturer = { id: id, faculty_id: faculty_id, lecturer_name: lecturer_name };
 
         const result = await controller.create(lecturer);
 
-        if (result) {
-            res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "Lecturer Name already exists" }
+        if (result === '404') {
+            msg = { msg: "Faculty ID not exists" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result === '409'){
+            msg = { msg: "Lecturer ID already exists" }
             res.status(409).send(JSON.stringify(msg, null, 4));
+        } else if (result) {
+            res.status(200).send(JSON.stringify(result, null, 4));
         }
     } catch (err) {
         console.log('An error occurred:', err);

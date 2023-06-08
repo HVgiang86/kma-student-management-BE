@@ -1,4 +1,5 @@
 const User = require('../../models/user');
+const Student = require('../../models/student');
 const Crypto = require('../../utils/crypto');
 const { v4: uuidv4 } = require('uuid');
 
@@ -77,12 +78,25 @@ UserController = {
 
     deleteByUid: async (uid) => {
         try {
-            const number = await User.destroy({ where: { uid: uid } });
+            const user = await User.findOne({
+                where: { uid: uid }
+            });
+            if (user) {
+                var num = (await Student.findAll({ where: { uid: uid } })).length;
 
-            if (number == 0) {
-                return null;
+                if (num > 0) {
+                    return '409';
+                }
+
+                await user.destroy();
+                console.log("Controller: Deleted user: " + JSON.stringify(user, null, 4));
+                return '200';
+            } else {
+                console.log("User not found - Controller")
+                return '404';
             }
-            return number;
+
+            return null;
         } catch (err) {
             console.log("An error occurred: " + err);
             throw new Error(err);

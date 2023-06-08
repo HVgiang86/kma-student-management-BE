@@ -5,18 +5,25 @@ const SubjectClass = require('../../models/subjectClass');
 lecturerController = {
     create: async (lecturer) => {
         try {
+            var id = lecturer.id;
             var faculty_id = lecturer.faculty_id;
             var lecturer_name = lecturer.lecturer_name;
 
-            const result = await Lecturer.findOne({ where: { lecturer_name: lecturer_name } })
+            const result = await Lecturer.findOne({ where: { id: id } })
 
             if (result) {
-                console.log("Lecturer Name already exists - Controller")
-                return null;
+                console.log("Lecturer id already exists - Controller")
+                return '409';
+            }
+
+            const faculty = await Faculty.findByPk(faculty_id);
+
+            if (!faculty) {
+                return '404';
             }
 
             var newLecturer = null;
-            await Faculty.create({ faculty_id: faculty_id, lecturer_name: lecturer_name }).then(lecturer => {
+            await Lecturer.create({ id: id, faculty_id: faculty_id, lecturer_name: lecturer_name }).then(lecturer => {
                 newLecturer = lecturer;
                 console.log("Controller: Create lecturer: " + JSON.stringify(newLecturer, null, 4));
             }).catch(err => {
@@ -54,14 +61,18 @@ lecturerController = {
         try {
             const id = lecturer.id;
             const faculty_id = lecturer.faculty_id;
-            const lecturer_name = lecturer.lecturer_name;
 
             const lecturerToUpdate = await Lecturer.findByPk(id);
 
             if (!lecturerToUpdate)
-                return null;
+                return '404';
 
-            const result = await lecturerController.update(lecturer);
+            const  faculty = await Faculty.findByPk(faculty_id);
+
+            if (!faculty)
+                return '409';
+
+            const result = await lecturerToUpdate.update(lecturer);
 
             return result;
         } catch (err) {

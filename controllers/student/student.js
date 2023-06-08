@@ -132,7 +132,7 @@ StudentController = {
                 return '409';
             }
 
-            console.log(num2)
+            //console.log(num2)
 
             // if (num2 > 0) {
             //     return '409';

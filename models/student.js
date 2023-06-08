@@ -25,5 +25,5 @@ const model = sequelize.define('student', {
 
 model.hasOne(user, { foreignKey: 'uid', sourceKey: 'uid' })
 model.belongsTo(student_class, { foreignKey: 'class_id' });
-model.belongsTo(major, { foreignKey: 'major_id', sourceKey: 'id' });
+model.belongsTo(major, { foreignKey: 'major_id' });
 module.exports = model;

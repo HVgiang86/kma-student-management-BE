@@ -353,6 +353,16 @@ router.get('/', authen.isAuth, async function (req, res, next) {
  *                  msg:
  *                    type: string
  *                    example: No Account Found
+ *        409:
+ *          description: Exist Student reference to user account
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Exist Student reference to user account
  *        500:
  *          description: Internal server error
  *          content:
@@ -375,14 +385,21 @@ router.delete('/', authen.isAuth, async function (req, res, next) {
 		}
 
 		const uid = req.body.uid;
+		console.log(uid);
 		const result = await controller.deleteByUid(uid);
 
-		if (result) {
+		if (result === '200') {
 			msg = { msg: `Deleted user with uid: ${uid}` }
 			res.status(200).send(JSON.stringify(msg, null, 4));
-		} else {
+		} else if (result === '404') {
 			msg = { msg: "No Account Found" }
 			res.status(404).send(JSON.stringify(msg, null, 4));
+		} else if (result === '409') {
+			msg = { msg: "Exist Student reference to user account" }
+			res.status(409).send(JSON.stringify(msg, null, 4));
+		} else {
+			msg = { msg: "Internal server error" }
+			res.status(500).send(JSON.stringify(msg, null, 4));
 		}
 	} catch (err) {
 		console.log('An error occurred:', err);
