@@ -94,6 +94,11 @@ FacultyController = {
     },
     getMajorListByFacultyId: async (id) => {
         try {
+            const faculty = await Faculty.findOne({ where: { id: id } });
+
+            if (!faculty)
+                return '404';
+            
             const result = await Major.findAll({ where: { faculty_id: id } });
             console.log("Controller: Get major list: " + JSON.stringify(result, null, 4));
             return result;
@@ -104,6 +109,11 @@ FacultyController = {
     },
     getLecturerListByFacultyId: async (id) => {
         try {
+            const faculty = await Faculty.findOne({ where: { id: id } });
+
+            if (!faculty)
+                return '404';
+
             const result = await Lecturer.findAll({ where: { faculty_id: id } });
             console.log("Controller: Get lecturer list: " + JSON.stringify(result, null, 4));
             return result;
@@ -114,6 +124,11 @@ FacultyController = {
     },
     getStudentListByFacultyId: async (id) => {
         try {
+            const faculty = await Faculty.findOne({ where: { id: id } });
+
+            if (!faculty)
+                return '404';
+            
             const result = await Student.findAll({ where: { faculty_id: id } });
             console.log("Controller: Get student list: " + JSON.stringify(result, null, 4));
             return result;

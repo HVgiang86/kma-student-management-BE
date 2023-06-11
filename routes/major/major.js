@@ -286,8 +286,8 @@ router.put('/', async (req, res) => {
  *              type: object
  *              properties:
  *                id:
- *                  type: string
- *                  example: ktmt
+ *                  type: int
+ *                  example: 1
  *     responses:
  *        200:
  *          description: Success
@@ -319,6 +319,16 @@ router.put('/', async (req, res) => {
  *                  msg:
  *                    type: string
  *                    example: Major not found
+ *        409:
+ *          description: Major has students, cannot delete
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Major has students, cannot delete
  *        500:
  *          description: Internal server error
  *          content:
@@ -334,14 +344,27 @@ router.delete('/', async (req, res) => {
     try {
         const id = req.body.id;
 
+        if (!id) {
+            msg = { msg: "Invalid input" }
+            res.status(400).send(JSON.stringify(msg, null, 4));
+            return;
+        }
+
         const result = await controller.delete(id);
-        if (result) {
-            msg = { msg: "Delete major successfully" }
+        if (result === '200') {
+            msg = { msg: "Major deleted" }
             res.status(200).send(JSON.stringify(msg, null, 4));
-        } else {
+        } else if (result === '404') {
             msg = { msg: "Major not found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result === '409') {
+            msg = { msg: "Major has students, cannot delete" }
+            res.status(409).send(JSON.stringify(msg, null, 4));
+        } else {
+            msg = { msg: "Internal server error" }
+            res.status(500).send(JSON.stringify(msg, null, 4));
         }
+
     } catch (err) {
         console.log('An error occurred:', err);
         msg = { msg: "Internal server error" }

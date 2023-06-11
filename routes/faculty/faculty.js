@@ -437,7 +437,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *     description: Get all majors of faculty
  *     responses:
  *        200:
- *          description: Success
+ *          description: Success. Empty list if no major found
  *          content:
  *            application/json:
  *              schema:
@@ -445,7 +445,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *                items:
  *                  $ref: '#/components/schemas/Major'
  *        404:
- *          description: Major not found
+ *          description: No Faculty Found
  *          content:
  *            application/json:
  *              schema:
@@ -453,7 +453,7 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Major not found
+ *                    example: No Faculty Found
  *        500:
  *          description: Internal server error
  *          content:
@@ -475,9 +475,13 @@ router.get('/:id/major', auth.isAuth, async function (req, res, next) {
 
         if (result && result.length > 0) {
             res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "No Major Found" }
+        } else if (result === '404') {
+            msg = { msg: "No Faculty Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result === null || result.length === 0) {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
         }
 
     } catch (err) {
@@ -499,7 +503,7 @@ router.get('/:id/major', auth.isAuth, async function (req, res, next) {
  *     description: Get all lecturers of faculty
  *     responses:
  *        200:
- *          description: Success
+ *          description: Success. Empty list if no lecturer found
  *          content:
  *            application/json:
  *              schema:
@@ -507,7 +511,7 @@ router.get('/:id/major', auth.isAuth, async function (req, res, next) {
  *                items:
  *                  $ref: '#/components/schemas/Lecturer'
  *        404:
- *          description: Lecturer not found
+ *          description: No Faculty Found
  *          content:
  *            application/json:
  *              schema:
@@ -515,7 +519,7 @@ router.get('/:id/major', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Lecturer not found
+ *                    example: No Faculty Found
  *        500:
  *          description: Internal server error
  *          content:
@@ -537,9 +541,13 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
 
         if (result && result.length > 0) {
             res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "No Lecturer Found" }
+        } else if (result === '404') {
+            msg = { msg: "No Faculty Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
+        } else {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
         }
     } catch (err) {
         console.log('An error occurred:', err);
@@ -561,7 +569,7 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
  *     description: Get all students of faculty
  *     responses:
  *        200:
- *          description: Success
+ *          description: Success. Empty list if no student found
  *          content:
  *            application/json:
  *              schema:
@@ -569,7 +577,7 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
  *                items:
  *                  $ref: '#/components/schemas/DisplayStudent'
  *        404:
- *          description: Student not found
+ *          description: No Faculty Found
  *          content:
  *            application/json:
  *              schema:
@@ -577,7 +585,7 @@ router.get('/:id/lecturer', auth.isAuth, async function (req, res, next) {
  *                properties:
  *                  msg:
  *                    type: string
- *                    example: Student not found
+ *                    example: No Faculty Found
  *        500:
  *          description: Internal server error
  *          content:
@@ -599,9 +607,13 @@ router.get('/:id/student', auth.isAuth, async function (req, res, next) {
 
         if (result && result.length > 0) {
             res.status(200).send(JSON.stringify(result, null, 4));
-        } else {
-            msg = { msg: "No Student Found" }
+        } else if  (result === '404') {
+            msg = { msg: "No Faculty Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
+        } else {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
         }
     } catch (err) {
         console.log('An error occurred:', err);

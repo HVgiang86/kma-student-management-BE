@@ -1,4 +1,5 @@
 const Major = require('../../models/major');
+const Student = require('../../models/student');
 
 MajorController = {
     create: async (major) => {
@@ -51,22 +52,20 @@ MajorController = {
         try {
             const major = await Major.findByPk(id);
             if (!major)
-                return 404;
+                return '404';
+
+            const num = (await Student.findAll({ where: { major_id: id } })).length;
+            if (num !== 0) {
+                console.log("Major has students");
+                return '409';
+            }
 
             const result = await major.destroy();
-            // else {
-            //     const num = (await SubjectClassModel.findAll({ where: { subject_id: id } })).length;
-            //     if (num !== 0) {
-            //         return 400;
-            //     } else {
 
-            //         if (result) {
-            //             return 200;
-            //         } else {
-            //             return 500;
-            //         }
-            //     }
-            // }
+            if (result)
+                return '200';
+            else
+                return '500';
 
         } catch (err) {
             console.log("An error occurred: " + err);

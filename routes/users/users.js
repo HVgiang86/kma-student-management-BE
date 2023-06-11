@@ -65,7 +65,7 @@ const authorizer = require('../../middleware/authorization');
  *         first_name: "Hoang Van"
  *         last_name: "Giang"
  *         gender: "male"
- *         date_of_birth: "1999-01-01"
+ *         date_of_birth: "08/06/2002"
  *         citizen_id: "123456789"
  *         nation: "Kinh"
  *         religion: "Không"

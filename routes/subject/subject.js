@@ -354,6 +354,11 @@ router.delete('/', auth.isAuth, async function (req, res, next) {
     }
 });
 
+
+router.get('/:id', auth.isAuth, async function (req, res) { 
+    
+});
+
 //lay danh sach cac lop cua mon
 router.get('/:id/class', auth.isAuth, async function (req, res) { });
 

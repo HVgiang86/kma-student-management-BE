@@ -4,7 +4,7 @@
  -- use kma_student_management;
  
  use bywjzbfdem2u3dlkooa0;
- create table student_classes(
+create table student_classes(
 	id varchar(16) primary key,
     class_name nvarchar(40)
  );
@@ -153,13 +153,13 @@ insert into subject_classes (id,subject_id,lecturer_id,schedule_id,class_name) v
 
 -- insert user
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
-values ('7760636423614133','$2b$10$CU2YdkTwfaum391rHZ0jJu70ACvIMm1g/O9c4DCi7HtQtgYvIM4tu','Hoàng Văn','Giang','admin@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','admin');
+values ('7760636423614133','$2b$10$CU2YdkTwfaum391rHZ0jJu70ACvIMm1g/O9c4DCi7HtQtgYvIM4tu','Hoàng Văn','Giang','admin@gmail.com','123456789','123 Nguyen Van Linh','Kinh','08/06/2002','123456789','Không','Vietnam','male','admin');
 
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
-values ('d871b2a935f14b17','$2b$10$2kBT.C.sGFR0bRd1xRYxM.gxpXlzoasMRGweWFJMwxzGCMwmgkj6q','Hoang Van','Giang','student@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','student');
+values ('d871b2a935f14b17','$2b$10$2kBT.C.sGFR0bRd1xRYxM.gxpXlzoasMRGweWFJMwxzGCMwmgkj6q','Hoang Van','Giang','student@gmail.com','123456789','123 Nguyen Van Linh','Kinh','08/06/2002','123456789','Không','Vietnam','male','student');
 
 insert into users (uid,hashed_password,first_name,last_name,email,phone_number,address,nation,date_of_birth,citizen_id,religion,nationality,gender,role_name) 
-values ('e04946e681ab4897','$2b$10$2sJ5Sac53ljFwLruM8dLyO7rkZq6wrD3vUo/.l0WWNlgzcsW5Zb7G',' Trần Văn','An','student2@gmail.com','123456789','123 Nguyen Van Linh','Kinh','1999-01-01','123456789','Không','Vietnam','male','student');
+values ('e04946e681ab4897','$2b$10$2sJ5Sac53ljFwLruM8dLyO7rkZq6wrD3vUo/.l0WWNlgzcsW5Zb7G',' Trần Văn','An','student2@gmail.com','123456789','123 Nguyen Van Linh','Kinh','08/06/2002','123456789','Không','Vietnam','male','student');
 
 -- insert students
 insert into students (id, uid, class_id, major_id,year_of_admission, graduation_year) values

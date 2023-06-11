@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "run": "node app.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -87,7 +87,7 @@ lecturerController = {
             if (!lecturer)
                 return '404';
 
-            const num1 = (await Faculty.findAll({ where: { faculty_id: lecturer.faculty_id } })).length;
+            const num1 = (await Faculty.findAll({ where: { id: lecturer.faculty_id } })).length;
             const num2 = (await SubjectClass.findAll({ where: { lecturer_id: id } })).length;
 
             if (num1 > 0 || num2 > 0)

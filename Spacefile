@@ -1,0 +1,31 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: StudentManagementBE
+    src: ./
+    engine: nodejs16
+    primary: true
+    commands:
+      - npm start
+    include:
+      - dist
+    run: node app.js
+    dev: nodemon app.js
+    presets:
+      env:
+        - name: DB_HOST
+          default: "bywjzbfdem2u3dlkooa0-mysql.services.clever-cloud.com"
+        - name: DB_NAME
+          default: "bywjzbfdem2u3dlkooa0"
+        - name: DB_PASS
+          default: "OtKOez3OfWpxQR3doOny"
+        - name: DB_USER
+          default: "uipvz1ur4io3ic8e"
+        - name: JWT_SECRET
+          default: "kmaGiangSecretKey"
+    actions:
+      - id: "cleanup"
+        name: "Clean Up"
+        description: "Cleans up unused data"
+        trigger: "schedule"
+        default_interval: "0/15 * * * *"

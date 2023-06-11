@@ -144,6 +144,7 @@ StudentController = {
                 return '500';
 
             const user = await UserController.deleteByUid(student.uid);
+
             if (!user)
                 return '404';
 
