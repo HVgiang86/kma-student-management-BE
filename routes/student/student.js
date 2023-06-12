@@ -343,6 +343,7 @@ router.get('/all', auth.isAuth, async function (req, res) {
  */
 router.get('/', auth.isAuth, async function (req, res) {
     console.log('/GET student');
+    console.log(req.user);
     try {
         const requestedUserId = req.user.uid;
         if (req.user.role_name !== 'student') {
@@ -373,7 +374,7 @@ router.get('/', auth.isAuth, async function (req, res) {
  *        - bearerAuth: []
  *     tags:
  *        - Student
- *     summary: Get student information by student_code
+ *     summary: Get student information by student_code. Admin only
  *     description: Get student information by student_code
  *     responses:
  *        200:
@@ -383,16 +384,6 @@ router.get('/', auth.isAuth, async function (req, res) {
  *              schema:
  *                items:
  *                  $ref: '#/components/schemas/DisplayStudent'
- *        400:
- *          description: No Student Found
- *          content:
- *            application/json:
- *              schema:
- *                type: object
- *                properties:
- *                  msg:
- *                    type: string
- *                    example: No student found
  *        404:
  *          description: No Student Found
  *          content:
@@ -416,13 +407,36 @@ router.get('/', auth.isAuth, async function (req, res) {
  */
 router.get('/:id', auth.isAuth, async function (req, res) {
     console.log('/GET student');
+
     try {
-        const student_code = req.params.id;
-        if (req.user.role_name !== 'admin') {
-            msg = { msg: "Bad Request. Forbidened" }
+        const student_code = req.params.id.toUpperCase();
+        const requestedUserId = req.user.uid;
+        const role = req.user.role_name;
+
+        if (role !== 'admin') {
+            const student = await controller.getStudent(requestedUserId);
+            if (!student) {
+                msg = { msg: "No student found" }
+                res.status(404).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+
+            if (role !== 'admin' && student_code !== student.student_code) {
+                console.log(role);
+                console.log(student.id);
+                msg = { msg: "Bad Request. Forbidened" }
+                res.status(400).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+        }
+
+
+        if (student_code.length == 0) {
+            msg = { msg: "Invalid input" }
             res.status(400).send(JSON.stringify(msg, null, 4));
             return;
         }
+
 
         const result = await controller.getStudentByStudentCode(student_code);
         if (result) {
@@ -438,9 +452,94 @@ router.get('/:id', auth.isAuth, async function (req, res) {
     }
 });
 
+/**
+ * @swagger
+ * /student/{id}/subject:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     tags:
+ *        - Student
+ *     summary: Get subject list of student by student_code. Admin only
+ *     description: Get subject list of student by student_code. Admin only
+ *     responses:
+ *        200:
+ *          description: Success. Empty array if no subject found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                items:
+ *                  $ref: '#/components/schemas/Subject'
+ *        404:
+ *          description: No Student Found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: No student found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
 //lấy danh sách các môn của sv
 router.get('/:id/subject', auth.isAuth, async function (req, res) {
+    console.log('/GET student/{id}/subject');
+    try {
+        const student_code = req.params.id.toUpperCase();
+        const requestedUserId = req.user.uid;
+        const role = req.user.role_name;
 
+        if (role !== 'admin') {
+            const student = await controller.getStudent(requestedUserId);
+            if (!student) {
+                msg = { msg: "No student found" }
+                res.status(404).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+
+            if (role !== 'admin' && student_code !== student.student_code) {
+                console.log(role);
+                console.log(student.id);
+                msg = { msg: "Bad Request. Forbidened" }
+                res.status(400).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+        }
+
+
+        if (student_code.length == 0) {
+            msg = { msg: "Invalid input" }
+            res.status(400).send(JSON.stringify(msg, null, 4));
+            return;
+        }
+
+        const result = await controller.getStudentSubjectListById(student_code);
+
+        if (result === '404') {
+            msg = { msg: "No student found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
 });
 
 //lấy bảng điểm của sv

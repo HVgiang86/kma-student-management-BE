@@ -1,6 +1,8 @@
 const Student = require('../../models/student');
 const UserController = require('../../controllers/users/users');
 const SubjectStudentClass = require('../../models/subjectStudentClass');
+const SubjectClass = require('../../models/subjectClass');
+const StudentSubjectClass = require('../../models/subjectStudentClass');
 //const Score = require('../../models/score');
 
 
@@ -83,9 +85,17 @@ StudentController = {
     getStudentByStudentCode: async (id) => {
         try {
             const student = await Student.findByPk(id);
+
+            if (!student) { 
+                return null;
+            }
+
             console.log("Controller: Get student: " + JSON.stringify(student, null, 4));
             const uid = student.uid;
             const user = await UserController.getUserInfo(uid);
+
+            if (!user)
+                return null;
 
             const result = getDisplayableResult(student, user);
             console.log("Controller: Get student: " + JSON.stringify(result, null, 4));
@@ -197,6 +207,22 @@ StudentController = {
                 role_name: student.role_name
             }
         } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
+    getStudentSubjectListById: async (id) => { 
+        try {
+            const student = await Student.findByPk(id);
+            if (!student)
+                return '404';
+            
+            const subjectList = await StudentSubjectClass.findAll({ where: { student_id: id } });
+
+            
+            
+            return subjectList;
+        } catch (err) { 
             console.log("An error occurred: " + err);
             throw new Error(err);
         }
