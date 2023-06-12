@@ -105,6 +105,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+
+app.get('/check', (req, res) => {
+    res.status(200).send('OK');
+});
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/login', loginRouter);
@@ -135,9 +140,6 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-app.get('/check', (req, res) => {
-    res.status(200).send('OK');
-});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)
