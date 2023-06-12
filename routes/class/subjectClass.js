@@ -26,3 +26,13 @@
  *            description: class_name
  *            example: CNPM01
  */
+
+var express = require('express');
+var router = express.Router();
+var controller = require('../../controllers/class/subjectClass');
+const auth = require('../../middleware/authentication');
+
+
+
+module.exports = router;
+

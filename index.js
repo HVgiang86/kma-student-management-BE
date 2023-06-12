@@ -58,7 +58,8 @@ const options = {
         './routes/major/major.js',
         './routes/student/student.js',
         './routes/lecturer/lecturer.js',
-        './routes/class/subjectClass.js']
+        './routes/class/subjectClass.js',
+        './routes/class/studentClass.js',]
 }
 const specs = swaggerJsDoc(options);
 
@@ -74,6 +75,26 @@ const specs = swaggerJsDoc(options);
  *  - bearerAuth: []                                                                                                                                                                                                                                                                                                                                                                                                                                        
  */
 
+var app = express();
+var port = process.env.PORT || '8080';
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.set('port', port);
+
+app.use(cors());
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.get('/check', (req, res) => {
+    res.status(200).send('OK');
+});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users/users');
@@ -86,29 +107,8 @@ var subjectRouter = require('./routes/subject/subject');
 var majorRouter = require('./routes/major/major');
 var studentRouter = require('./routes/student/student');
 var lecturerRouter = require('./routes/lecturer/lecturer');
-
-var app = express();
-var port = process.env.PORT || '8080';
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.set('port', port);
-
-
-app.use(cors());
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
-
-app.get('/check', (req, res) => {
-    res.status(200).send('OK');
-});
+var studentClassRouter = require('./routes/class/studentClass');
+var subjectClassRouter = require('./routes/class/subjectClass');
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -121,6 +121,8 @@ app.use('/subject', subjectRouter);
 app.use('/major', majorRouter);
 app.use('/student', studentRouter);
 app.use('/lecturer', lecturerRouter);
+app.use('/studentClass', studentClassRouter);
+app.use('/subjectClass', subjectClassRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 

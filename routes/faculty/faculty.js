@@ -346,9 +346,11 @@ router.post('/', auth.isAuth, async function (req, res, next) {
  *          content:
  *            application/json:
  *              schema:
- *                type: array
- *                items:
- *                  $ref: '#/components/schemas/Faculty'
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Deleted successfully
  *       400:
  *          description: Bad Request. Has lectures belonging to this faculty?
  *          content:
@@ -607,7 +609,7 @@ router.get('/:id/student', auth.isAuth, async function (req, res, next) {
 
         if (result && result.length > 0) {
             res.status(200).send(JSON.stringify(result, null, 4));
-        } else if  (result === '404') {
+        } else if (result === '404') {
             msg = { msg: "No Faculty Found" }
             res.status(404).send(JSON.stringify(msg, null, 4));
         } else {

@@ -65,6 +65,21 @@ StudentController = {
             throw new Error(err);
         }
     },
+    getDisplayableStudent: async (student) => {
+        try {
+
+            const user = await UserController.getUserInfo(student.uid);
+
+            if (!user)
+                return null;
+
+            return getDisplayableResult(student, user);
+
+        } catch (err) {
+            console.log("An error occurred: " + err);
+            throw new Error(err);
+        }
+    },
 
     create: async (student, user) => {
         try {

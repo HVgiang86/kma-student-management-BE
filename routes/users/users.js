@@ -675,4 +675,6 @@ module.exports = router;
  *  description: API operations related to Major management
  *  - name: Lecturer
  *  description: API operations related to Lecturer management
+ *  - name: StudentClass
+ *  description: API operations related to StudentClass management
  */
