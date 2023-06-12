@@ -135,8 +135,8 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-app.get('/deta', (req, res) => {
-    res.send('Deta Hello World!')
+app.get('/check', (req, res) => {
+    res.status(200).send('OK');
 });
 
 app.listen(port, () => {
