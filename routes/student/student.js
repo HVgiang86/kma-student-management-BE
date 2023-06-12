@@ -236,13 +236,86 @@ const auth = require('../../middleware/authentication');
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ToDisplayStudentScore:
+ *       type: object
+ *       properties:
+ *         subject_id:
+ *           type: string
+ *           description: subject_id
+ *         subject_name:
+ *           type: string
+ *           description: subject_name
+ *         TP1:
+ *           type: float
+ *           description: TP1 score
+ *         TP2:
+ *           type: float
+ *           description: TP2 score
+ *         HK:
+ *           type: float
+ *           description: HK score
+ *         TK4:
+ *           type: float
+ *           description: Điểm tổng kết score  
+ *         TKLetter:
+ *           type: string
+ *           description: Điểm tổng kết chữ 
+ *       example:
+ *         subject_id: "cnpm"
+ *         subject_name: "Cong nghe phan mem"
+ *         TP1: 7.2
+ *         TP2: 7.2
+ *         HK: 4
+ *         TK4: 4.2
+ *         TK10: 4.2
+ *         TKLetter: "B"
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ToDisplayStudentSchedule:
+ *       type: object
+ *       properties:
+ *         subject_id:
+ *           type: string
+ *           description: subject_id
+ *         subject_name:
+ *           type: string
+ *           description: subject_name
+ *         class_name:
+ *           type: string
+ *           description: class_name
+ *         lecturer_name:
+ *           type: string
+ *           description: lecturer_name
+ *         start_time:
+ *           type: string
+ *           description: start_time
+ *         end_time:
+ *           type: string
+ *           description: end_time
+ *       example:
+ *         subject_id: "cnpm"
+ *         subject_name: "Cong nghe phan mem"
+ *         class_name: "Cong nghe phan mem 01" 
+ *         lecturer_name: "Nguyen Van A"
+ *         start_time: "07:00"
+ *         end_time: "09:00"
+ */
+
+/**
+ * @swagger
  * /student/all:
  *   get:
  *     security:
  *        - bearerAuth: []
  *     tags:
  *        - Student
- *     summary: Get all students
+ *     summary: Get all students. Admin only
  *     description: Get all students
  *     responses:
  *        200:
@@ -300,7 +373,7 @@ router.get('/all', auth.isAuth, async function (req, res) {
  *        - bearerAuth: []
  *     tags:
  *        - Student
- *     summary: Get student information
+ *     summary: Get student information. Owner only
  *     description: Get student information
  *     responses:
  *        200:
@@ -374,7 +447,7 @@ router.get('/', auth.isAuth, async function (req, res) {
  *        - bearerAuth: []
  *     tags:
  *        - Student
- *     summary: Get student information by student_code. Admin only
+ *     summary: Get student information by student_code. Admin and owner can use this api
  *     description: Get student information by student_code
  *     responses:
  *        200:
@@ -460,8 +533,8 @@ router.get('/:id', auth.isAuth, async function (req, res) {
  *        - bearerAuth: []
  *     tags:
  *        - Student
- *     summary: Get subject list of student by student_code. Admin only
- *     description: Get subject list of student by student_code. Admin only
+ *     summary: Get subject list of student by student_code. Admin and owner can use this api
+ *     description: Get subject list of student by student_code
  *     responses:
  *        200:
  *          description: Success. Empty array if no subject found
@@ -542,14 +615,184 @@ router.get('/:id/subject', auth.isAuth, async function (req, res) {
     }
 });
 
+/**
+ * @swagger
+ * /student/{id}/score:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     tags:
+ *        - Student
+ *     summary: Get score list of student by student_code. Admin and owner can use this api
+ *     description: Get score list of student by student_code
+ *     responses:
+ *        200:
+ *          description: Success. Empty array if no score found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                items:
+ *                  $ref: '#/components/schemas/ToDisplayStudentScore'
+ *        404:
+ *          description: No Student Found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: No student found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
 //lấy bảng điểm của sv
-router.get('/:id/score', auth.isAuth, async function (req, res) { });
+router.get('/:id/score', auth.isAuth, async function (req, res) {
+    console.log('/GET student/{id}/score');
+    try {
+        const student_code = req.params.id.toUpperCase();
+        const requestedUserId = req.user.uid;
+        const role = req.user.role_name;
 
-//Lấy thông tin cá nhân qua id
-router.get('/:id/', auth.isAuth, async function (req, res) { });
+        if (role !== 'admin') {
+            const student = await controller.getStudent(requestedUserId);
+            if (!student) {
+                msg = { msg: "No student found" }
+                res.status(404).send(JSON.stringify(msg, null, 4));
+                return;
+            }
 
+            if (role !== 'admin' && student_code !== student.student_code) {
+                console.log(role);
+                console.log(student.id);
+                msg = { msg: "Bad Request. Forbidened" }
+                res.status(400).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+        }
+
+        if (student_code.length == 0) {
+            msg = { msg: "Invalid input" }
+            res.status(400).send(JSON.stringify(msg, null, 4));
+            return;
+        }
+
+        const result = await controller.getScoreListByStudentId(student_code);
+
+        if (result === '404') {
+            msg = { msg: "No student found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+}
+);
+
+/**
+ * @swagger
+ * /student/{id}/schedule:
+ *   get:
+ *     security:
+ *        - bearerAuth: []
+ *     tags:
+ *        - Student
+ *     summary: Get schedule list of student by student_code. Admin and owner can use this api
+ *     description: Get schedule list of student by student_code
+ *     responses:
+ *        200:
+ *          description: Success. Empty array if no schedule found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                items:
+ *                  $ref: '#/components/schemas/ToDisplayStudentSchedule'
+ *        404:
+ *          description: No Student Found
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: No student found
+ *        500:
+ *          description: Internal server error
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  msg:
+ *                    type: string
+ *                    example: Internal server error
+ */
 //Lay lich hoc cua sv
-router.get('/:id/schedule', auth.isAuth, async function (req, res) { });
+router.get('/:id/schedule', auth.isAuth, async function (req, res) {
+    console.log('/GET student/{id}/schedule');
+    try {
+        const student_code = req.params.id.toUpperCase();
+        const requestedUserId = req.user.uid;
+        const role = req.user.role_name;
+
+        if (role !== 'admin') {
+            const student = await controller.getStudent(requestedUserId);
+            if (!student) {
+                msg = { msg: "No student found" }
+                res.status(404).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+
+            if (role !== 'admin' && student_code !== student.student_code) {
+                console.log(role);
+                console.log(student.id);
+                msg = { msg: "Bad Request. Forbidened" }
+                res.status(400).send(JSON.stringify(msg, null, 4));
+                return;
+            }
+        }
+
+        if (student_code.length == 0) {
+            msg = { msg: "Invalid input" }
+            res.status(400).send(JSON.stringify(msg, null, 4));
+            return;
+        }
+
+        const result = await controller.getScheduleByStudentId(student_code);
+
+        if (result === '404') {
+            msg = { msg: "No student found" }
+            res.status(404).send(JSON.stringify(msg, null, 4));
+        } else if (result && result.length > 0) {
+            res.status(200).send(JSON.stringify(result, null, 4));
+        } else {
+            const jsonArray = [];
+            const jsonString = JSON.stringify(jsonArray);
+            res.status(200).send(jsonString);
+        }
+    } catch (err) {
+        console.log('An error occurred:', err);
+        msg = { msg: "Internal server error" }
+        res.status(500).send(JSON.stringify(msg, null, 4));
+    }
+});
 
 
 /**

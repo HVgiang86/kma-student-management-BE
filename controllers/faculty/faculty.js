@@ -2,6 +2,8 @@ const Faculty = require('../../models/faculty');
 const Lecturer = require('../../models/lecturer');
 const Major = require('../../models/major');
 const Student = require('../../models/student');
+const User = require('../../models/user');
+const StudentController = require('../student/student');
 
 FacultyController = {
     getFacultyList: async () => {
@@ -98,7 +100,7 @@ FacultyController = {
 
             if (!faculty)
                 return '404';
-            
+
             const result = await Major.findAll({ where: { faculty_id: id } });
             console.log("Controller: Get major list: " + JSON.stringify(result, null, 4));
             return result;
@@ -128,8 +130,30 @@ FacultyController = {
 
             if (!faculty)
                 return '404';
-            
-            const result = await Student.findAll({ where: { faculty_id: id } });
+
+            var result = [];
+
+            const majorList = await Major.findAll({ where: { faculty_id: id } });
+
+            if (!majorList)
+                return result;
+
+            for (const major of majorList) {
+                console.log("Major: " + JSON.stringify(major, null, 4));
+                const student = await Student.findAll({ where: { major_id: major.id } });
+
+                for (const s of student) {
+                    console.log("Student: " + JSON.stringify(s, null, 4));
+                    if (!result)
+                        continue;
+
+                    const user = await User.findByPk(s.uid);
+
+                    const toDisplayStudent = StudentController.getDisplayableResult(s, user);
+                    result.push(toDisplayStudent);
+                }
+            }
+
             console.log("Controller: Get student list: " + JSON.stringify(result, null, 4));
             return result;
         } catch (err) {
