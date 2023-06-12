@@ -2,15 +2,11 @@
 v: 0
 micros:
   - name: StudentManagementBE
-    src: ./
+    src: .
     engine: nodejs16
     primary: true
-    commands:
-      - npm start
-    include:
-      - dist
-    run: node app.js
-    dev: nodemon app.js
+    run: "node index.js"
+    dev: "nodemon index.js"
     presets:
       env:
         - name: DB_HOST

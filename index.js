@@ -88,8 +88,7 @@ var studentRouter = require('./routes/student/student');
 var lecturerRouter = require('./routes/lecturer/lecturer');
 
 var app = express();
-
-var port = process.env.PORT || '3000';
+var port = process.env.PORT || '8080';
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -136,7 +135,9 @@ app.use(function (err, req, res, next) {
     res.render('error');
 });
 
-
+app.get('/deta', (req, res) => {
+    res.send('Deta Hello World!')
+});
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)

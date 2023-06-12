@@ -12,7 +12,7 @@ console.log(`password: ${password}`)
 console.log(`database: ${database}`)
 
 
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(database, user, password, {
     host: host,
