@@ -7,6 +7,7 @@ var db = require('./configs/dbconnection');
 const bodyParser = require('body-parser');
 var cors = require('cors')
 
+//Database connection test
 db.authenticate().then(() => {
     console.log('Connection has been established successfully.');
 }).catch(err => {
@@ -18,6 +19,7 @@ db.sync().then(() => {
     console.error(err);
 });
 
+//Swagger UI configuration
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 
@@ -146,3 +148,20 @@ app.use(function (err, req, res, next) {
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}!`)
 });
+
+
+/**
+ * @swagger
+ * tags:
+ * 	- name: User
+ *  - name: Login/Logout
+ *  - name: Student
+ *  - name: Password
+ *  - name: Faculty
+ *  - name: Schedule
+ *  - name: Subject
+ *  - name: Major
+ *  - name: Lecturer
+ *  - name: StudentClass
+ *  - name: SubjectClass 
+ */

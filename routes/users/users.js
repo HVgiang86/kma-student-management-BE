@@ -654,27 +654,3 @@ router.post('/', async function (req, res, next) {
 
 module.exports = router;
 
-/**
- * @swagger
- * tags:
- * 	- name: User
- *  description: API operations related to User management
- *  - name: Login/Logout
- *  description: API operations related to Login/Logout
- *  - name: Student
- *  description: API operations related to Student management
- *  - name: Password
- *  description: API operations related to Password management
- *  - name: Faculty
- *  description: API operations related to Faculty management
- *  - name: Schedule
- *  description: API operations related to Schedule management
- *  - name: Subject
- *  description: API operations related to Subject management
- *  - name: Major
- *  description: API operations related to Major management
- *  - name: Lecturer
- *  description: API operations related to Lecturer management
- *  - name: StudentClass
- *  description: API operations related to StudentClass management
- */
