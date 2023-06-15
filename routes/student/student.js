@@ -352,6 +352,7 @@ router.get('/all', auth.isAuth, async function (req, res) {
     console.log('/GET student/all');
     try {
         if (req.user.role_name !== 'admin') {
+            console.log(req.user.role_name);
             const requestedUserId = req.user.uid;
             const result = await controller.getStudent(requestedUserId);
             if (result) {
