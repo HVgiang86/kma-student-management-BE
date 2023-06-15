@@ -351,6 +351,19 @@ const auth = require('../../middleware/authentication');
 router.get('/all', auth.isAuth, async function (req, res) {
     console.log('/GET student/all');
     try {
+        if (req.user.role_name !== 'admin') {
+            const requestedUserId = req.user.uid;
+            const result = await controller.getStudent(requestedUserId);
+            if (result) {
+                res.status(200).send(JSON.stringify(result, null, 4));
+            } else {
+                msg = { msg: "No student found" }
+                res.status(404).send(JSON.stringify(msg, null, 4));
+            }
+            return;
+        }
+
+
         const result = await controller.getStudentList();
         if (result && result.length > 0) {
             res.status(200).send(JSON.stringify(result, null, 4));

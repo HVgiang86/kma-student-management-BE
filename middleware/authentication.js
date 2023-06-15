@@ -31,7 +31,7 @@ authMiddleware = {
                 }
             } catch (err) {
                 console.log('An error occurred:', err);
-                msg = { msg: "Internal server error" }
+                msg = { msg: "Internal server error with user authentication" }
                 res.status(500).send(JSON.stringify(msg, null, 4));
             }
         } else {
